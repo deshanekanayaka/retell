@@ -38,6 +38,14 @@ erDiagram
     attempt ||--o| evaluation : "judged by"
 ```
 
+**Interim table, not shown above: `recording`.** S1 (record and upload) shipped ahead of
+transcription and evaluation, so it needed somewhere to put raw audio before `attempt` had any
+reason to exist: id, anonymous session id, `recording_type` (`answer` / `mic_check` /
+`validation_a` / `validation_b`), audio storage path, created at. Same RLS shape as every
+user-owned table (`auth.uid() = anonymous_session_id`), same private-bucket-only access as the
+rest of this document promises. Superseded by `attempt` in S2; whether rows migrate forward or
+`recording` stays as the raw-audio record `attempt` points at is an S2 decision.
+
 ### user
 
 | Column | Notes |

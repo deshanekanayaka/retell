@@ -203,6 +203,13 @@ used.
 **Rejected: the story as the scheduled unit.** A story can be strong for one angle and useless
 for another, so a single per story schedule averages over a distinction that matters.
 
+**Interim table, not in this model: `recording`.** S1 (record and upload) needed somewhere to
+put raw audio before transcription, evaluation, or scheduling existed, so it introduced a
+`recording` table (id, anonymous session id, `recording_type`, audio URL, created at) ahead of
+this schema. It is superseded by `attempt` once S2 adds transcription; migrating `recording`
+rows forward, or leaving `recording` as the raw-audio record `attempt` points at, is an S2
+decision, not S1's.
+
 ### 3.5 Cost control
 
 Three independent limits, all in application code (FR-36, FR-37):

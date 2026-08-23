@@ -4,7 +4,8 @@ S1: record and upload. Spec at context/features/s1-record-and-upload-spec.md.
 
 ## Status
 
-In Progress
+All 10 implementation steps done. Remaining before this closes out: Deshan flips ADR-012 and
+ADR-014 from Proposed to Accepted, and this branch merges to main.
 
 ## Goals
 
@@ -85,7 +86,9 @@ Order, smallest working slice first:
    into review (via Playwright's clock API). Full record → upload → dev-verification playback
    round trip and both validation arms were already verified live in steps 6-8. Real Firefox/
    Safari and real-phone checks remain manual, deferred per ADR-012.
-10. **Docs**: add the `recording`-is-interim note to docs/02 section 3.4 and docs/06 section 2.
+10. **Docs**: done. Added the `recording`-is-interim note to docs/02 section 3.4 and docs/06
+    section 2, explaining it predates `attempt`, is superseded by it in S2, and the
+    migrate-forward-or-not decision is S2's to make.
 
 Test plan is in the spec, unchanged here.
 
