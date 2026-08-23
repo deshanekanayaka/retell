@@ -7,8 +7,9 @@ Steps are defined in docs/03-delivery-plan.md. There are no dates.
 
 ## Now
 
-- [ ] S0: create the repository, Next.js app, Supabase project, deploy an empty app, CI green
-- [ ] S0: fill in the real commands in CLAUDE.md and verify each one works
+- [ ] S0: push to origin/main and confirm CI green, confirm the Vercel deploy is live (repo,
+  Next.js app, and Supabase project are created and wired; Vercel is connected but nothing is
+  pushed yet)
 
 ## Next
 
