@@ -29,3 +29,18 @@ ever see our version.
 that would show our custom label — the native element measurably improves how often people
 successfully grant the permission after an initial denial, which was worth more than the exact
 wording. The rest of the fixed copy (the explainer paragraphs) is unaffected.
+
+## Countdown reset via setState-in-effect, and a stale closure narrowing — 2026-08-23
+
+**Technical**: `RecordingUI.tsx` reset `secondsRemaining` with a direct `setState` call inside
+the MediaRecorder-management effect, tripping ESLint's `react-hooks/set-state-in-effect`.
+Separately, `Waveform.tsx`'s null checks on `canvas`/`context` didn't survive TypeScript's
+narrowing into the nested `draw()` function declaration, producing real `tsc` errors.
+**Plain**: Restarting a recording was resetting its own timer in a way React considers unsafe
+(it can cause extra re-renders), and a null-check on the drawing canvas stopped "counting" once
+the code moved into a nested function, even though the check already happened one line above.
+**Fix**: Each recording attempt is now its own small component, remounted fresh on restart
+instead of manually resetting state — React's own recommended fix for this exact pattern, and
+it also closes a real race where a discarded restart's late-firing recorder event could have
+overwritten a newer take. The canvas fix just rebinds the checked values to new, explicitly
+non-nullable constants. Caught by ESLint and `tsc` respectively, not by a live browser test.

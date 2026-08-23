@@ -37,23 +37,25 @@ Order, smallest working slice first:
    user-agent matching). `components/BrowserGate.tsx` + `app/record/page.tsx`. Verified live in
    real Chrome (both branches, no console errors) via a one-off Playwright install, plus a unit
    test for the detection function.
-5. **Permission screen**: in progress. Fixed copy from docs/04 section 1.1, using the real
+5. **Permission screen**: done. Fixed copy from docs/04 section 1.1, using the real
    `<usermedia>` element (fires `stream` / `error` / `cancel` events, mapping directly onto
    granted / denied / dismissed). On denial: explanation + the same control, show the question
    they'd have answered — worked example deferred (founder-authored content, not yet written,
    see spec's Out of scope and `context/tasks.md`). On dismissal: change nothing, treat as not
    yet asked.
-6. **Recording UI**: logic agreed, not yet coded. State machine:
-   `idle → recording → review → uploading → done`, with `restart` reachable from both
-   `recording` (discards in-progress audio, starts a fresh 60s take) and `review` (goes back to
-   `recording`). Countdown and waveform run during `recording` with no urgency styling as it
-   nears zero (waveform is the only in-recording feedback, per docs/04). Timeout and manual
-   stop both land in `review` the same way; stop finalizes whatever was captured with no
-   minimum-length gate (the FR-10 15-second rule is an S2/S3 evaluation-stage check, not a
-   capture-stage one). Submit: request a signed upload URL, upload the audio, write the
-   `recording` row only after the upload succeeds (not before — keeps "fewest moving parts,"
-   docs/02 constraint 1), then move to `done`. On upload failure, stay in `review` with the
-   audio intact so they can retry (raw audio is never lost, CLAUDE.md hard rule).
+6. **Recording UI**: done. `lib/recording-state.ts` — pure reducer, unit tested, state machine
+   as agreed. `components/RecordingUI.tsx` + `components/Waveform.tsx`. Each take is its own
+   `RecordingTake` subcomponent remounted on `state.take` (a restart is a clean remount, not a
+   manual state reset — also closes a race where a discarded take's late-firing recorder event
+   could otherwise clobber a newer one). Submit requests a signed upload URL, uploads client-side
+   via `lib/supabase/upload.ts`, writes the `recording` row via `lib/supabase/recordings.ts`
+   only after the upload succeeds, then moves to `done`. On failure, stays in `review` with the
+   audio intact. Verified end to end against the live project: real MediaRecorder capture (fake
+   device via a temporary bypass page, since `<usermedia>`'s native prompt can't be automated —
+   see `context/bugs.md`), full state transitions including both restart paths, a real
+   `recording` row and a real ~21KB `audio/webm` file landing in storage. Extracted
+   `lib/supabase/session.ts` (shared auth check) and `lib/supabase/constants.ts` (bucket name)
+   out of `storage.ts` to avoid duplicating them into `recordings.ts`.
 7. **Dev verification route**: not started. Fetch-and-play, confirms the round trip, not linked
    from any real screen.
 8. **Validation pages**: `/validate/a` (mic check + question) and `/validate/b` (question
