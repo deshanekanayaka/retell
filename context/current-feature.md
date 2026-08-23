@@ -4,8 +4,8 @@ S1: record and upload. Spec at context/features/s1-record-and-upload-spec.md.
 
 ## Status
 
-All 10 implementation steps done. Remaining before this closes out: Deshan flips ADR-012 and
-ADR-014 from Proposed to Accepted, and this branch merges to main.
+All 10 implementation steps done. ADR-012 and ADR-014 accepted. Remaining before this closes
+out: merge this branch to main.
 
 ## Goals
 

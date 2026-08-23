@@ -1,6 +1,6 @@
 # ADR-014: Plain `getUserMedia()`, not `<usermedia>`
 
-- **Status**: Proposed
+- **Status**: Accepted
 - **Date**: 2026-08-23
 
 ## Context

@@ -1,6 +1,6 @@
 # ADR-012: Desktop Chrome first, real-phone testing deferred
 
-- **Status**: Proposed
+- **Status**: Accepted
 - **Date**: 2026-08-23
 
 ## Context
