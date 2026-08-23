@@ -75,8 +75,16 @@ Order, smallest working slice first:
    Verified end to end against the live project via ad-hoc Playwright: both arms recorded,
    uploaded, and reached the canned feedback screen, with arm A's mic check correctly
    auto-advancing into the question step without stopping on its own "done" state.
-9. **Test pass**: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`. Manual pass on
-   Chrome desktop per the spec's test plan (ADR-012: real-phone deferred).
+9. **Test pass**: done. `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build` all pass.
+   Browser flows the automated gates don't cover verified against real Chrome via ad-hoc
+   Playwright (installed then removed, per this session's pattern): unsupported-browser message
+   (faked by deleting `Navigator.prototype.userAgentData`), denial and dismissal both landing on
+   the identical flat `notGranted` screen (faked via a stubbed `getUserMedia` rejection, same
+   `NotAllowedError` either way per ADR-014), restart mid-recording staying on the recording
+   screen, stop-early reaching review with Submit available, and the 60s countdown auto-stopping
+   into review (via Playwright's clock API). Full record → upload → dev-verification playback
+   round trip and both validation arms were already verified live in steps 6-8. Real Firefox/
+   Safari and real-phone checks remain manual, deferred per ADR-012.
 10. **Docs**: add the `recording`-is-interim note to docs/02 section 3.4 and docs/06 section 2.
 
 Test plan is in the spec, unchanged here.
