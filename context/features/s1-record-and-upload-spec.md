@@ -42,7 +42,9 @@ verification are deferred, tracked in `context/tasks.md`.
 - MUST implement the two-arm validation page as two static routes (arm A: scripted mic check
   then one question; arm B: the question only), both using the same record/upload flow, both
   storing to the `recording` table with `recording_type = 'validation_a'` / `'validation_b'`.
-  Feedback after submit is a single canned message, no backend beyond the upload.
+  Feedback after submit is a single canned message, no backend beyond the upload. Question:
+  "Tell me about something you worked on with other people recently. What happened?" Mic-check
+  sentence reused verbatim from docs/04 section 1.3.
 
 ## Out of scope
 

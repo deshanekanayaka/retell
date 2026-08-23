@@ -64,9 +64,17 @@ Order, smallest working slice first:
    URL. 404s outside development (`process.env.NODE_ENV === "production"`), never linked from
    any real screen. Verified live against the dev server: fresh session correctly shows "No
    recordings yet."
-8. **Validation pages**: `/validate/a` (mic check + question) and `/validate/b` (question
-   only), reusing the recording UI component, canned feedback screen, `recording_type` set per
-   arm.
+8. **Validation pages**: done. `components/ValidationFlow.tsx`, one component parameterized by
+   `arm: "a" | "b"`, used by `app/validate/a/page.tsx` and `app/validate/b/page.tsx`. Arm A runs
+   `RecordingUI` twice in sequence (`mic_check` then `validation_a`), tracked by a local
+   `step: "micCheck" | "question" | "feedback"` state; arm B skips straight to `validation_b`.
+   `RecordingUI` gained an optional `onDone` callback, fired once when a take reaches `done`, so
+   the parent can advance to the next step automatically. Question text ("Tell me about
+   something you worked on with other people recently. What happened?") and the mic-check
+   sentence (docs/04 section 1.3, reused verbatim) are both fixed copy, agreed with Deshan.
+   Verified end to end against the live project via ad-hoc Playwright: both arms recorded,
+   uploaded, and reached the canned feedback screen, with arm A's mic check correctly
+   auto-advancing into the question step without stopping on its own "done" state.
 9. **Test pass**: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`. Manual pass on
    Chrome desktop per the spec's test plan (ADR-012: real-phone deferred).
 10. **Docs**: add the `recording`-is-interim note to docs/02 section 3.4 and docs/06 section 2.

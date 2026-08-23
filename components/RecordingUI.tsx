@@ -85,13 +85,21 @@ function RecordingTake({
 export function RecordingUI({
   stream,
   recordingType,
+  onDone,
 }: {
   stream: MediaStream;
   recordingType: RecordingType;
+  onDone?: () => void;
 }) {
   const [state, dispatch] = useReducer(recordingReducer, initialRecordingState);
   const blobRef = useRef<Blob | null>(null);
   const [uploadFailed, setUploadFailed] = useState(false);
+
+  useEffect(() => {
+    if (state.status === "done") {
+      onDone?.();
+    }
+  }, [state.status, onDone]);
 
   function handleStopped(blob: Blob) {
     blobRef.current = blob;
