@@ -29,17 +29,19 @@ Three deliberate choices. Naming the awkward thing pre-empts the surprise that c
 abstract. "The first one doesn't count" removes the performance stake before the decision is
 made.
 
-Implementation uses Chrome's `usermedia` element with a `getUserMedia` fallback inside it, so
-unsupporting browsers render the inner button. Feature detect on `'HTMLUserMediaElement' in
-window`.
+Implementation is a plain button calling `navigator.mediaDevices.getUserMedia({ audio: true })`
+(ADR-014 — Chrome's declarative `usermedia` element was tried first but only supports combined
+audio and video, no audio-only mode).
 
 **On denial**, never re-prompt and never show a settings tutorial. The screen changes to an
-explanation plus the same element, because tapping it again triggers the browser's own recovery
+explanation plus the same button, since tapping it again re-triggers the browser's own recovery
 flow. Below it, show the question they would have answered and a worked example built from a
 clearly labelled fictional character.
 
-**On dismissal**, which the browser reports separately from denial, change nothing and say
-nothing. Treat it as not yet asked.
+**On dismissal**, ideally this is reported separately from denial: change nothing and say
+nothing, treat it as not yet asked. In practice `getUserMedia()` cannot tell the two apart —
+both reject with the same `NotAllowedError` — so dismissal currently gets the same gentle
+denial screen rather than staying silent (ADR-014).
 
 ### 1.2 Recording
 

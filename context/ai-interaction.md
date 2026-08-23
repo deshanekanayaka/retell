@@ -31,7 +31,9 @@ Two obligations on Claude that this agreement depends on:
 - Never add features, options or nice-to-haves that are not in the spec.
 - Never delete files without asking.
 - After a multi-file task, end with a short file-by-file summary.
-- Every diagram is a mermaid block. Never ASCII art.
+- Every diagram is a mermaid block, never ASCII art, except pseudocode diagrams inside a logic
+  checkpoint (see below), which use ASCII, since mermaid renders as raw unrendered source text
+  in chat and is less legible there.
 
 ## Feature workflow, for every significant change
 
@@ -50,6 +52,30 @@ rubric version, error code), or any change to model behaviour.
 8. **Update docs** made stale by the change, in the same branch.
 9. **Commit** after approval, conventional message. Merge, delete branch.
 10. **Log**: one line in `context/progress.md`. Reset current-feature.md.
+
+## Logic checkpoint, before implementing a step
+
+Applies inside step 6 of the feature workflow ("implement incrementally"), and to any fix or
+small change, whenever a step has more than one reasonable way to do it. Purely mechanical
+steps, with no real fork in them, skip this and just get done.
+
+For each step with a real decision in it:
+
+- Post a header: `## Task: <name>`, then single-line bullets with one blank line between each —
+  **Overview** (one or two sentences, where this fits in the bigger picture), **What it is**
+  (plain language, a real-world analogy over jargon where it helps), **Why**, **Inputs**,
+  **Outputs**.
+- Stop. Wait for Deshan to say go before asking anything.
+- Build the logic one small decision at a time, in a Duolingo-style exercise: a few plausible
+  options, one correct given the docs or architecture, brief feedback explaining why if a
+  flawed one is picked, before moving to the next micro-decision.
+- Pseudocode is ASCII in a code block, not mermaid (see the ASCII exception above).
+- If Deshan proposes the logic himself instead of answering a question, evaluate it like step 2
+  of the working agreement: say whether it holds up, cite what it does or doesn't match in the
+  docs, correct it if needed. Don't accept it uncritically just because he said it.
+
+The point is keeping Deshan in the design at the granularity decisions actually happen, not
+just once at the top of a whole feature.
 
 ## When stuck
 
