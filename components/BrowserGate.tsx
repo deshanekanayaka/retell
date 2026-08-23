@@ -13,7 +13,7 @@ function subscribe() {
 }
 
 function getSnapshot(): GateStatus {
-  return isChromeSupported(window) ? "supported" : "unsupported";
+  return isChromeSupported(navigator) ? "supported" : "unsupported";
 }
 
 function getServerSnapshot(): GateStatus {

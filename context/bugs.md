@@ -44,3 +44,23 @@ instead of manually resetting state — React's own recommended fix for this exa
 it also closes a real race where a discarded restart's late-firing recorder event could have
 overwritten a newer take. The canvas fix just rebinds the checked values to new, explicitly
 non-nullable constants. Caught by ESLint and `tsc` respectively, not by a live browser test.
+
+## `<usermedia>` can't do audio-only, forcing a revert to plain `getUserMedia()` — 2026-08-23
+
+**Technical**: Chrome's `<usermedia>` element (ADR-013) only supports combined audio+video
+requests — no audio-only mode exists — confirmed against Chrome's own docs. The permission
+screen was silently requesting camera access too; on a Mac with Chrome's camera access blocked
+at the OS level, the combined request failed instantly with no prompt ever shown, surfacing as
+a "denied" state with no popup and a native button reading "Use microphone and camera."
+Separately, `getUserMedia()` can't distinguish a dismissed prompt from a deliberate denial —
+both reject with the same `NotAllowedError`.
+**Plain**: The new microphone button was quietly also asking for camera permission, which this
+product never needs, and on a machine where Chrome's camera access is turned off, that made
+the whole request fail before the user ever saw a real popup.
+**Fix**: `components/PermissionScreen.tsx` reverted to a plain button calling
+`getUserMedia({ audio: true })` (ADR-014, supersedes ADR-013) — audio-only, and restores the
+exact "Turn on my microphone" copy from docs/04. Denial and dismissal now get one identical
+screen, since the platform can't tell them apart. `lib/browser-support.ts`'s Chrome/Chromium
+check also moved from `<usermedia>`'s existence (Chrome 151+ only, no longer relevant) to
+`navigator.userAgentData`. Caught by clicking through the real permission screen in real
+Chrome, not by any automated check.

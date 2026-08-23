@@ -27,4 +27,5 @@ Drafting: AI may draft, Deshan approves and flips Status from Proposed to Accept
 | 010 | Postgres, not a document store | Proposed |
 | 011 | No numeric score shown to users in Phase 1 | Proposed |
 | 012 | Desktop Chrome first, real-phone testing deferred | Proposed |
-| 013 | Accept Chrome's native `<usermedia>` label over the fixed button copy | Proposed |
+| 013 | Accept Chrome's native `<usermedia>` label over the fixed button copy | Superseded by ADR-014 |
+| 014 | Plain `getUserMedia()`, not `<usermedia>` | Proposed |

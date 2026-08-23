@@ -1,9 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
-type PermissionOutcome = "idle" | "denied";
+type PermissionOutcome = "idle" | "notGranted";
 
+// getUserMedia() can't distinguish a deliberate block from a dismissed
+// prompt — both reject with NotAllowedError (ADR-014) — so both are handled
+// the same way here, one flat outcome rather than a denied/dismissed split.
 export function PermissionScreen({
   question,
   onGranted,
@@ -11,38 +14,16 @@ export function PermissionScreen({
   question?: string;
   onGranted: (stream: MediaStream) => void;
 }) {
-  const elementRef = useRef<HTMLUserMediaElement>(null);
   const [outcome, setOutcome] = useState<PermissionOutcome>("idle");
 
-  useEffect(() => {
-    const element = elementRef.current;
-    if (!element) {
-      return;
+  async function requestMicrophone() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      onGranted(stream);
+    } catch {
+      setOutcome("notGranted");
     }
-
-    element.setConstraints({ audio: {} });
-
-    function handleStream() {
-      const stream = elementRef.current?.stream;
-      if (stream) {
-        onGranted(stream);
-      }
-    }
-
-    function handleError() {
-      setOutcome("denied");
-    }
-
-    // "cancel" (dismissal) intentionally has no handler: docs/04 says change
-    // nothing and say nothing on dismissal, so there's nothing to wire up.
-    element.addEventListener("stream", handleStream);
-    element.addEventListener("error", handleError);
-
-    return () => {
-      element.removeEventListener("stream", handleStream);
-      element.removeEventListener("error", handleError);
-    };
-  }, [onGranted]);
+  }
 
   return (
     <div>
@@ -51,11 +32,11 @@ export function PermissionScreen({
       <p>Your recordings stay on your account. Nobody else hears them.</p>
       <p>The first one doesn&apos;t count. It&apos;s a mic check.</p>
 
-      <usermedia ref={elementRef}>
-        <button type="button">Turn on my microphone</button>
-      </usermedia>
+      <button type="button" onClick={requestMicrophone}>
+        Turn on my microphone
+      </button>
 
-      {outcome === "denied" && (
+      {outcome === "notGranted" && (
         <div>
           <p>
             You can turn it on whenever you&apos;re ready. Tap the button

@@ -1,6 +1,6 @@
 # ADR-013: Accept Chrome's native `<usermedia>` label over the fixed button copy
 
-- **Status**: Proposed
+- **Status**: Superseded by ADR-014
 - **Date**: 2026-08-23
 
 ## Context

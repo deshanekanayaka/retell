@@ -32,17 +32,19 @@ Order, smallest working slice first:
 3. **Storage**: done. Private `recordings` bucket + `lib/supabase/storage.ts` signed
    upload/download URL helpers. `uid` read server-side from the verified session. Verified end
    to end against the live bucket: upload, download, cross-user access denial.
-4. **Browser gate**: done. `lib/browser-support.ts` feature-detects Chrome 151's `<usermedia>`
-   element (`'HTMLUserMediaElement' in window`, confirmed against Chrome's own docs — never
-   user-agent matching). `components/BrowserGate.tsx` + `app/record/page.tsx`. Verified live in
-   real Chrome (both branches, no console errors) via a one-off Playwright install, plus a unit
-   test for the detection function.
-5. **Permission screen**: done. Fixed copy from docs/04 section 1.1, using the real
-   `<usermedia>` element (fires `stream` / `error` / `cancel` events, mapping directly onto
-   granted / denied / dismissed). On denial: explanation + the same control, show the question
-   they'd have answered — worked example deferred (founder-authored content, not yet written,
-   see spec's Out of scope and `context/tasks.md`). On dismissal: change nothing, treat as not
-   yet asked.
+4. **Browser gate**: done. `lib/browser-support.ts` feature-detects Chromium via
+   `navigator.userAgentData` (User-Agent Client Hints — never user-agent string matching).
+   Originally checked `<usermedia>`'s existence, which pinned to Chrome 151+ for no reason once
+   `<usermedia>` itself was dropped (ADR-014). `components/BrowserGate.tsx` +
+   `app/record/page.tsx`. Verified live in real Chrome, plus a unit test for the detection
+   function.
+5. **Permission screen**: done. Fixed copy from docs/04 section 1.1, using plain
+   `getUserMedia({ audio: true })` (ADR-014, superseding ADR-013 — Chrome's `<usermedia>`
+   element only supports combined audio+video, no audio-only mode). One flat outcome for
+   denial and dismissal, since `getUserMedia()` can't distinguish them (both reject with
+   `NotAllowedError`); shows the explanation + the question they'd have answered — worked
+   example deferred (founder-authored content, not yet written, see spec's Out of scope and
+   `context/tasks.md`).
 6. **Recording UI**: done. `lib/recording-state.ts` — pure reducer, unit tested, state machine
    as agreed. `components/RecordingUI.tsx` + `components/Waveform.tsx`. Each take is its own
    `RecordingTake` subcomponent remounted on `state.take` (a restart is a clean remount, not a

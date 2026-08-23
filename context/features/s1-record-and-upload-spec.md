@@ -18,10 +18,12 @@ verification are deferred, tracked in `context/tasks.md`.
 - MUST show a full screen permission explainer before the browser mic prompt, using the fixed
   copy in docs/04-voice-and-evaluation.md section 1.1, with the button "Turn on my microphone"
   (FR-2).
-- MUST feature-detect Chrome/Chromium (`'HTMLUserMediaElement' in window`, per docs/04 section
-  1.1) and show an explanatory message on unsupported browsers, no permission prompt (FR-34).
+- MUST feature-detect Chrome/Chromium (`'userAgentData' in navigator`, ADR-014) and show an
+  explanatory message on unsupported browsers, no permission prompt (FR-34).
 - On mic permission denial: never re-prompt automatically, never show a settings tutorial.
-  Change the screen per docs/04 section 1.1 ("On denial"). Dismissal changes nothing.
+  Change the screen per docs/04 section 1.1 ("On denial"). Dismissal gets the same screen —
+  `getUserMedia()` can't distinguish the two (ADR-014), a documented deviation from docs/04's
+  "change nothing" ideal for dismissal.
 - MUST record audio with the browser `MediaRecorder`, no third party library (FR-14).
 - MUST show a 60 second countdown that stops recording at zero (FR-18).
 - MUST allow restarting the recording before submit, at no cost, always visible (FR-18).
