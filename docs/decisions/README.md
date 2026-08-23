@@ -26,3 +26,4 @@ Drafting: AI may draft, Deshan approves and flips Status from Proposed to Accept
 | 009 | Retell never writes a story for the user | Proposed |
 | 010 | Postgres, not a document store | Proposed |
 | 011 | No numeric score shown to users in Phase 1 | Proposed |
+| 012 | Desktop Chrome first, real-phone testing deferred | Proposed |

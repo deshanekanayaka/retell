@@ -57,7 +57,7 @@ The goal of Phase 1 is one question: **do people come back on day four?**
 | Step | Ships | Requirements |
 | --- | --- | --- |
 | S0 | Repo, Next.js, Supabase project, deployed empty app, CI green | none |
-| S1 | Record in the browser, upload, play back. Permission screen, Chrome gate, in-app browser screen | FR-2, FR-14, FR-15, FR-18, FR-34, FR-35 |
+| S1 | Record in the browser, upload, play back. Permission screen, Chrome gate | FR-2, FR-14, FR-15, FR-18, FR-34 |
 | S2 | Deepgram transcription, word timings, computed duration, pace, longest pause, filler count | FR-16, FR-17 |
 | S3 | Evaluation module, three scores, stored separately from facts, feedback screen | FR-19 to FR-24 |
 | S4 | Signup and login, anonymous session claimed on signup, save an answer as a story | FR-7, FR-8, FR-9 |
@@ -68,6 +68,12 @@ The goal of Phase 1 is one question: **do people come back on day four?**
 S1 is first on purpose. Browser audio is the riskiest thing in the build, and finding out late
 that it does not work on a real phone would be fatal. S1 to S3 together are one answer end to
 end, which is the whole product. Everything after that is plumbing.
+
+**FR-35 (in-app browser detection) is deferred out of S1.** The near term focus is desktop
+Chrome; testers are not being recruited from social apps yet. This means the secondary
+validation measure in section 4 (counting sessions lost to in-app webviews) is not collected
+until it is built. Revisit when mobile or social recruitment is on the table, tracked in
+`context/tasks.md`.
 
 ## 4. Validation track, run alongside
 
@@ -133,7 +139,8 @@ A piece of work is done when all of the following are true.
 1. It meets the requirement it cites, and the requirement number is in the pull request.
 2. Lint, typecheck, tests and build all pass.
 3. It works in Chrome on a real phone, not only on the desktop simulator, for anything that
-   touches audio or layout.
+   touches audio or layout. **Deferred per ADR-012**: through S1, desktop Chrome verification
+   is sufficient; real-phone testing resumes before the validation page recruits testers.
 4. Any decision that overrode a previous one is recorded as an ADR.
 5. Any document it invalidates has been updated in the same change.
 6. Deshan has reviewed the code and can explain what each part does.

@@ -8,7 +8,7 @@ Steps are defined in docs/03-delivery-plan.md. There are no dates.
 ## Now
 
 - [ ] S1: record in the browser, upload to storage, play back (FR-14, FR-15, FR-18)
-- [ ] S1: permission screen with the fixed copy, Chrome gate, in-app browser screen (FR-2, FR-34, FR-35)
+- [ ] S1: permission screen with the fixed copy, Chrome gate (FR-2, FR-34)
 - [ ] S1: static two arm validation page, arm A with mic check, arm B without
 - [ ] S2: Deepgram transcription with word timings and filler words (FR-16)
 - [ ] S2: compute duration, pace, longest pause, filler count (FR-17)
@@ -25,3 +25,5 @@ Steps are defined in docs/03-delivery-plan.md. There are no dates.
 - [ ] Separate Supabase project for preview deployments (required before S7)
 - [ ] Confirm Deepgram and model provider retention and training defaults (required before S7)
 - [ ] Test Supabase restore (required before real users)
+- [ ] In-app browser detection and gate, FR-35 — deferred out of S1, desktop Chrome is the
+  focus for now, revisit if mobile/social recruitment needs it
