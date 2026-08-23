@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { BrowserGate } from "@/components/BrowserGate";
 import { PermissionScreen } from "@/components/PermissionScreen";
+import { RecordingUI } from "@/components/RecordingUI";
 
 export default function RecordPage() {
   const [stream, setStream] = useState<MediaStream | null>(null);
@@ -10,7 +11,7 @@ export default function RecordPage() {
   return (
     <BrowserGate>
       {stream ? (
-        <p>Recording UI goes here next.</p>
+        <RecordingUI stream={stream} recordingType="answer" />
       ) : (
         <PermissionScreen onGranted={setStream} />
       )}

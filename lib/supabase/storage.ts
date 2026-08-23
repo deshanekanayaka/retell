@@ -1,21 +1,7 @@
 "use server";
 
-import { createClient } from "./server";
-
-const RECORDINGS_BUCKET = "recordings";
-
-async function requireSession() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    throw new Error("No authenticated session");
-  }
-
-  return { supabase, userId: user.id };
-}
+import { RECORDINGS_BUCKET } from "./constants";
+import { requireSession } from "./session";
 
 export async function createSignedUploadUrl(): Promise<{
   path: string;
