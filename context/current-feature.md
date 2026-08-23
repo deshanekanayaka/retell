@@ -58,8 +58,12 @@ Order, smallest working slice first:
    `recording` row and a real ~21KB `audio/webm` file landing in storage. Extracted
    `lib/supabase/session.ts` (shared auth check) and `lib/supabase/constants.ts` (bucket name)
    out of `storage.ts` to avoid duplicating them into `recordings.ts`.
-7. **Dev verification route**: not started. Fetch-and-play, confirms the round trip, not linked
-   from any real screen.
+7. **Dev verification route**: done. `app/dev/verify-recording/page.tsx` fetches the most
+   recent `recording` row for the current anonymous session via
+   `lib/supabase/recordings.ts`'s `getLatestRecording()`, and plays it via a signed download
+   URL. 404s outside development (`process.env.NODE_ENV === "production"`), never linked from
+   any real screen. Verified live against the dev server: fresh session correctly shows "No
+   recordings yet."
 8. **Validation pages**: `/validate/a` (mic check + question) and `/validate/b` (question
    only), reusing the recording UI component, canned feedback screen, `recording_type` set per
    arm.
