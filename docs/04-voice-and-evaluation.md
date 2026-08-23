@@ -22,7 +22,9 @@ agreeing to (FR-2). The copy is fixed and is not softened:
 > Your recordings stay on your account. Nobody else hears them.
 > The first one doesn't count. It's a mic check.
 
-Button: **Turn on my microphone**
+Button: **Turn on my microphone**. In practice this label only shows on browsers that don't
+support `<usermedia>` at all, which the browser gate already filters out — every real visitor
+sees Chrome's own native control label instead. See ADR-013.
 
 Three deliberate choices. Naming the awkward thing pre-empts the surprise that causes denial.
 "Nobody else hears them" answers the real fear, which is being heard rather than privacy in the

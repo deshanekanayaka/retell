@@ -29,18 +29,20 @@ Order, smallest working slice first:
    `lib/supabase/middleware.ts`'s `updateSession`, refreshing the session on every request and
    calling `signInAnonymously()` when there isn't one. Verified: cookie set on first request,
    reused on the second, no duplicate sign-in.
-3. **Storage**: logic agreed, not yet coded. Private `recordings` bucket +
-   `lib/supabase/storage.ts` signed upload/download URL helpers. `uid` is read server-side from
-   the verified session, never accepted as a client-supplied parameter.
-4. **Browser gate**: logic agreed, not yet coded. Feature-detect a Chrome-only capability (never
-   user-agent string matching, since Chromium-based browsers share "Chrome" in their UA) as the
-   first screen, before permission or recording UI. No match → explanatory message, no
-   permission prompt. Unit test for the detection function.
-5. **Permission screen**: logic agreed, not yet coded. Fixed copy from docs/04 section 1.1.
-   On denial: change screen to an explanation + the same mic control below it (no auto
-   re-prompt, no settings tutorial), show the question they'd have answered plus a worked
-   example from a labelled fictional character. On dismissal: change nothing, treat as not yet
-   asked.
+3. **Storage**: done. Private `recordings` bucket + `lib/supabase/storage.ts` signed
+   upload/download URL helpers. `uid` read server-side from the verified session. Verified end
+   to end against the live bucket: upload, download, cross-user access denial.
+4. **Browser gate**: done. `lib/browser-support.ts` feature-detects Chrome 151's `<usermedia>`
+   element (`'HTMLUserMediaElement' in window`, confirmed against Chrome's own docs — never
+   user-agent matching). `components/BrowserGate.tsx` + `app/record/page.tsx`. Verified live in
+   real Chrome (both branches, no console errors) via a one-off Playwright install, plus a unit
+   test for the detection function.
+5. **Permission screen**: in progress. Fixed copy from docs/04 section 1.1, using the real
+   `<usermedia>` element (fires `stream` / `error` / `cancel` events, mapping directly onto
+   granted / denied / dismissed). On denial: explanation + the same control, show the question
+   they'd have answered — worked example deferred (founder-authored content, not yet written,
+   see spec's Out of scope and `context/tasks.md`). On dismissal: change nothing, treat as not
+   yet asked.
 6. **Recording UI**: logic agreed, not yet coded. State machine:
    `idle → recording → review → uploading → done`, with `restart` reachable from both
    `recording` (discards in-progress audio, starts a fresh 60s take) and `review` (goes back to

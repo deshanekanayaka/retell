@@ -27,3 +27,6 @@ Steps are defined in docs/03-delivery-plan.md. There are no dates.
 - [ ] Test Supabase restore (required before real users)
 - [ ] In-app browser detection and gate, FR-35 — deferred out of S1, desktop Chrome is the
   focus for now, revisit if mobile/social recruitment needs it
+- [ ] Denial-screen worked example (docs/04 section 1.1) — a fictional labelled example answer
+  plus the question it answers. Founder-authored content, required before the denial path is
+  fully spec-compliant. Ships without it for now; fixed copy and question only.

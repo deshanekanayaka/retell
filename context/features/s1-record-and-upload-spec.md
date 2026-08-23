@@ -55,6 +55,10 @@ verification are deferred, tracked in `context/tasks.md`.
   built here; tracked as a follow-up before S4 claims recordings.
 - Rate limiting (one answer per IP per day, FR-36) — not needed until the pipeline actually
   costs money, added in S6.
+- Denial screen worked example (docs/04 section 1.1) — the fictional labelled example answer
+  is founder-authored content (ADR-009 territory: not Claude's to draft), not yet written.
+  Denial screen ships with the fixed copy and the question only, tracked in
+  `context/tasks.md`.
 - In-app browser detection (FR-35) — deferred, desktop Chrome is the focus for now (ADR-012).
 - Real-phone verification — deferred to before the validation page recruits testers (ADR-012).
 
