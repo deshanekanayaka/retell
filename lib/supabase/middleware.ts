@@ -11,6 +11,9 @@ export async function updateSession(request: NextRequest) {
         return request.cookies.getAll();
       },
       setAll(cookiesToSet) {
+        // Mutates the caller's request, not a style choice: Next.js only propagates
+        // refreshed cookies to downstream Server Components in this request if they're
+        // written onto request.cookies before NextResponse.next({ request }) is built.
         for (const { name, value } of cookiesToSet) {
           request.cookies.set(name, value);
         }
