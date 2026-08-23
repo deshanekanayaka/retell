@@ -7,12 +7,6 @@ Steps are defined in docs/03-delivery-plan.md. There are no dates.
 
 ## Now
 
-- [ ] S0: push to origin/main and confirm CI green, confirm the Vercel deploy is live (repo,
-  Next.js app, and Supabase project are created and wired; Vercel is connected but nothing is
-  pushed yet)
-
-## Next
-
 - [ ] S1: record in the browser, upload to storage, play back (FR-14, FR-15, FR-18)
 - [ ] S1: permission screen with the fixed copy, Chrome gate, in-app browser screen (FR-2, FR-34, FR-35)
 - [ ] S1: static two arm validation page, arm A with mic check, arm B without
