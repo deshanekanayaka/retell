@@ -7,9 +7,6 @@ Steps are defined in docs/03-delivery-plan.md. There are no dates.
 
 ## Now
 
-- [ ] S1: record in the browser, upload to storage, play back (FR-14, FR-15, FR-18)
-- [ ] S1: permission screen with the fixed copy, Chrome gate (FR-2, FR-34)
-- [ ] S1: static two arm validation page, arm A with mic check, arm B without
 - [ ] S2: Deepgram transcription with word timings and filler words (FR-16)
 - [ ] S2: compute duration, pace, longest pause, filler count (FR-17)
 - [ ] S3: lib/evaluate.ts, schema enforced, three scores (FR-19, FR-20, FR-21)
