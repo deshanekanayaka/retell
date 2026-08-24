@@ -70,6 +70,23 @@ Verified working as of S0.
 - Ask before committing. Never commit with a failing build or tests.
 - Conventional commits. No AI attribution in commit messages.
 
+**Installed design skills advise, docs/ decides.**
+
+Third-party design skills live in `.claude/skills/`. They are advisory input, never authority:
+
+- `docs/07-design-system.md` wins every conflict, in particular section 3.3 (forbidden colour),
+  section 4 (shape, shadow, icons) and section 5.3 (banned motion). A skill that recommends
+  springs, bounce, scale-on-press, shadows, gradients or a second accent hue is describing a
+  house style Retell already rejected. Raise the conflict, never apply it silently.
+- Motion, colour, and habit-layer psychology stay founder authored. Skills encoding return
+  hooks, completion highs or streak pressure meet the dark-patterns ban above and
+  docs/05 section 7.2, whatever their stated rationale.
+- `web-design-engineer` is scoped to the marketing landing page. It brings layout and section
+  craft, never its own palette, type scale or tokens.
+- What skills are good for here: auditing whether the system was executed (contrast, focus
+  order, hierarchy, hit areas), and reasoning about easing, latency and perceived performance
+  inside the limits docs/07 already sets.
+
 **Copy.**
 
 - No em dashes anywhere, in prose, docs or UI.
