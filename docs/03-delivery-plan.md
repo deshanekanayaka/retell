@@ -165,6 +165,17 @@ Reviewed at the Phase 1 gate.
 useful, stop. That combination means neither the habit nor the value proposition holds, and no
 amount of Phase 2 work fixes it.
 
+**A cost accepted in advance.** Retell's habit layer runs on approach rather than loss aversion
+(05-spaced-repetition.md section 7.2). Loss aversion is the mechanism behind the streak numbers
+every comparable product reports, and removing it probably lowers day 4 return relative to what
+a Duolingo-shaped version of this product would reach. By how much, nobody can say.
+
+This is recorded here rather than in the habit layer document because here is where it will
+matter. A result between 10 and 25 percent will look like evidence that the habit layer is too
+soft, and the cheapest available response will be to add loss framing back. That response is not
+on the table. The trade was made deliberately, and the banned list in 05 section 7.2 does not
+reopen because a number came in low.
+
 ## 9. Reviews
 
 - **End of each step**: what shipped, what is next. One paragraph in `context/progress.md`.

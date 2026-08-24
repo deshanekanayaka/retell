@@ -13,13 +13,15 @@ drills your own interview stories against real question variants.
 | 04 | Voice and Evaluation | Technical | Engineering |
 | 05 | Spaced Repetition | Both | Engineering, product |
 | 06 | Data and Privacy | Both | Engineering, anyone asking what is stored |
+| 07 | Design System | Both | Engineering, design |
 
 ## Reading order
 
 1. **01 PRD** for the what and why. Every other document derives from it.
 2. **02 System Architecture** for how it is built and what was rejected.
 3. **03 Delivery Plan** for the order of work and the gates.
-4. **04, 05, 06** as needed. 04 owns the rubric, 05 owns the scheduler, 06 owns the schema.
+4. **04, 05, 06, 07** as needed. 04 owns the rubric, 05 owns the scheduler, 06 owns the schema,
+   07 owns type, colour, shape and motion.
 
 ## The other layers
 

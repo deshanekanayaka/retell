@@ -188,3 +188,103 @@ Rules, from the boundaries in 01-PRD.md section 5:
 - One reminder, at a time the user chooses, switchable off in one tap.
 - Nothing about the streak appears before the user has completed a second session. It is
   revealed when it means something, not announced on day one.
+
+### 7.2 What the habit layer runs on
+
+Duolingo's streak works through loss aversion. Their retention team says so directly: the jump
+between day one and day seven is loss aversion arriving, and most of their published findings
+sit downstream of it.
+
+01-PRD.md section 5 rules that out. So Retell runs on approach rather than avoidance: the user
+returns because returning is worth something, not because stopping costs something.
+
+That fits this user better than the alternative would. The primary persona's actual problem
+(01-PRD.md section 2) is believing that none of their experience counts. A product that proves
+them wrong week by week is pushing on the thing that is stopping them. A product that threatens
+them with a broken streak is not.
+
+**The test for anything added to this layer:** does it work by making stopping feel bad, or by
+making returning feel worth it? If it is the first, it does not ship.
+
+**Taken from Duolingo, none of it dependent on loss:**
+
+- **Protect the unit of use.** They gained nothing by lowering the streak requirement to a single
+  exercise, and captured only their least engaged users. Ours is one spoken answer and never
+  becomes less than that.
+- **Intentional commitment beats a Continue button**, and being allowed to decline is part of what
+  makes the choice real. Their opt-out button was almost as large a win as the easier goal it sat
+  next to.
+- **Never pre-select the harder option.** They pre-selected a tougher goal to speed users through
+  and lost significantly. No pre-ticked reminder, no default goal, no pre-selected anything.
+- **The early window is where retention is won.** For us that is day 4. Design and copy effort
+  belongs in sessions one to four.
+
+**Banned, and written down before the phase gate makes them tempting:**
+
+- Loss framing of any kind. No "don't lose your streak", no "your streak is at risk", no
+  countdown to losing something.
+- Guilt or shame for a missed day. No "we missed you", no sad mascot, no day counter since last
+  visit.
+- Fake urgency. No expiring offers, no artificial deadlines, no red timers.
+- Variable or unpredictable rewards. No chests, no surprise bonuses, nothing borrowed from slot
+  machines.
+- Social comparison. No leaderboards, no percentiles, no ranking against other users. This also
+  collides with the privacy promise in 06-data-and-privacy.md.
+- The streak as identity. It may exist and may be lost quietly. It is never framed as who the
+  user is.
+- Notification copy referencing anything the user stands to lose.
+
+### 7.3 The commitment moment
+
+At the end of session one only, one screen asking when they will do tomorrow's session. Three or
+four time choices and a visible decline. Choosing sets the reminder time. Declining means no
+reminder and no second ask, ever.
+
+The mechanism is implementation intention: making the next occasion concrete. It works by
+specifying the opportunity, not by making the alternative painful, which is why it passes the
+test in 7.2 when a streak warning does not.
+
+Rules:
+
+- It appears after the first feedback screen, never before. FR-1 puts a clock on reaching a
+  microphone and nothing may be inserted ahead of that.
+- The decline is the same size and weight as the choices (7.2, on pre-selection).
+- Nothing is pre-selected.
+- The copy stays a preference and never becomes an agreement. "When suits you tomorrow" is a
+  preference. "Promise you'll come back" is not.
+- Asked once in the product's lifetime.
+
+**Open, and blocking implementation, not the design.** FR-33 places the daily reminder in Phase 2,
+so a Phase 1 commitment screen would set a reminder time that nothing sends. Three ways out:
+ship this screen in Phase 2 alongside the reminder; ship it in Phase 1 as a stated intention with
+no notification behind it; or move the reminder to Phase 1, which is an FR change and Deshan's
+decision. Until that is settled this section describes the design, not a scheduled build.
+
+### 7.1 The session end message
+
+Ships in Phase 1 with the session screen (S6), ahead of the rest of this section.
+
+One line at the end of every session, under "Done for today." It is the counterpart to point 4
+of 04-voice-and-evaluation.md section 4: the place where a student who believes they have no
+experience is shown, in facts, that they have some.
+
+**It is evidence, never a compliment.** Every line is built from what actually happened in the
+session: answers given, stories now held, angles now covered, days practised, answers completed
+without stopping. A rotating bank of fixed encouragements is the failure mode. "Great work
+today" is empty, students detect it immediately, and it teaches them that nothing on the screen
+means anything.
+
+Rules:
+
+- Derived from session facts. The only fixed lines are the first session, where there is nothing
+  yet to count, and a session that produced almost nothing.
+- Never an outcome claim. Nothing about interviews going well, being ready, or getting hired.
+- Never a comparison with other users.
+- No exclamation marks. Never "amazing", "great job", "well done".
+- One line, no reward object. No badge, no points, no unlockable, no animation.
+- A weak session still gets a true line. Never silence, and never praise that the session does
+  not support.
+
+This is not the evaluation tone rule in 04 section 3.4 and does not conflict with it. That rule
+governs the feedback screen, where praise makes the gap question unbelievable. Session end is a
+different screen with a different job.
