@@ -27,10 +27,10 @@ export function PermissionScreen({
 
   return (
     <div>
-      <h1>You&apos;ll be speaking out loud.</h1>
-      <p>That&apos;s the point. Interview answers live in your mouth, not on a page.</p>
+      <h1>You&apos;ll be saying this out loud.</h1>
+      <p>It&apos;s allowed to come out messy. That&apos;s what practice is for.</p>
       <p>Your recordings stay on your account. Nobody else hears them.</p>
-      <p>The first one doesn&apos;t count. It&apos;s a mic check.</p>
+      <p>The first one is only a mic check. It doesn&apos;t count for anything.</p>
 
       <button type="button" onClick={requestMicrophone}>
         Turn on my microphone
