@@ -7,9 +7,6 @@ Steps are defined in docs/03-delivery-plan.md. There are no dates.
 
 ## Now
 
-- [ ] Real privacy policy. `/privacy` is a plain-language placeholder built from docs/06. Needs
-  the named processors (transcription and model providers), a data controller, a contact route
-  for data requests, and formal terms. Required before real users
 - [ ] S2: Deepgram transcription with word timings and filler words (FR-16)
 - [ ] S2: compute duration, pace, longest pause, filler count (FR-17)
 - [ ] S3: lib/evaluate.ts, schema enforced, three scores (FR-19, FR-20, FR-21)
@@ -30,3 +27,7 @@ Steps are defined in docs/03-delivery-plan.md. There are no dates.
 - [ ] Denial-screen worked example (docs/04 section 1.1) — a fictional labelled example answer
   plus the question it answers. Founder-authored content, required before the denial path is
   fully spec-compliant. Ships without it for now; fixed copy and question only.
+- [ ] Real privacy policy. `/privacy` is a plain-language placeholder built from docs/06 and
+  says so on the page. Needs the named processors (transcription and model providers), a data
+  controller, a contact route for data requests, and formal terms. Required before real users,
+  and pairs with the Deepgram retention item above, which answers part of it.
