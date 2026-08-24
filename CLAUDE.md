@@ -76,6 +76,8 @@ Verified working as of S0.
 - Never tell a user their answer is wrong. Weak, vague or unstructured, never wrong.
 - Never say "AI-powered" or "AI coach" in user-facing copy.
 - Plain, short, warm. Feedback is specific or it is not shown.
+- No praise the work does not support. Warmth is not congratulation.
+- Voice and tone are owned by docs/07-design-system.md section 6. These lines summarise it.
 
 <!-- BEGIN:nextjs-agent-rules -->
 

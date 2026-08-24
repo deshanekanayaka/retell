@@ -170,6 +170,11 @@ amount of Phase 2 work fixes it.
 every comparable product reports, and removing it probably lowers day 4 return relative to what
 a Duolingo-shaped version of this product would reach. By how much, nobody can say.
 
+Phase 1 also ships with no habit scaffolding at all. The commitment screen was proposed and
+rejected (05 section 7.3), and the streak and reminder are Phase 2 under FR-33. The day 4 number
+will therefore be the product's own pull with nothing helping it, which is the cleaner reading
+and also the lower one.
+
 This is recorded here rather than in the habit layer document because here is where it will
 matter. A result between 10 and 25 percent will look like evidence that the habit layer is too
 soft, and the cheapest available response will be to add loss framing back. That response is not
