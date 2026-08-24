@@ -109,8 +109,9 @@ never renumbered.
 - **FR-21** (P1): Facts about an answer (transcript, timings, signals) are stored separately
   from judgements about it (scores, grade), so answers can be re-scored without re-recording.
 - **FR-22** (P1): After each answer the user sees, in this order: their transcript with the
-  situation, action and result parts highlighted; one gap phrased as a question; duration and
-  pace as plain facts; the question types this story now covers.
+  situation, action and result parts highlighted; one gap phrased as a question; the question
+  types this story now covers. Duration and pace are not shown (ADR-016). They are still
+  computed and stored under FR-17.
 - **FR-23** (P1): No numeric score is shown to the user in Phase 1. Scores are stored from day
   one for calibration.
 - **FR-24** (P1): Feedback never states that an answer is wrong. It names one specific thing to

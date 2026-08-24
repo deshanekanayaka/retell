@@ -51,8 +51,8 @@ Both are variable, free, and self hosted through `next/font`. Two families is th
 | Transcript body | Serif | 18px | 19px | 400 | 1.7 | 62ch |
 | Body and explainer copy | Sans | 16px | 16px | 400 | 1.55 | 56ch |
 | Buttons | Sans | 17px | 17px | 500 | 1.2 | n/a |
-| Facts, the numbers | Sans, tabular | 26px | 30px | 500 | 1.1 | n/a |
-| Facts, the labels | Sans | 13px | 13px | 500 | 1.3 | n/a |
+| Facts, the numbers (unused in Phase 1, ADR-016) | Sans, tabular | 26px | 30px | 500 | 1.1 | n/a |
+| Facts, the labels (unused in Phase 1, ADR-016) | Sans | 13px | 13px | 500 | 1.3 | n/a |
 | Transcript rail labels | Sans | 12px | 12px | 500 | 1.3 | n/a |
 | Chips and small labels | Sans | 13px | 13px | 500 | 1.2 | n/a |
 | Countdown | Sans, tabular | 22px | 22px | 400 | 1 | n/a |
@@ -63,7 +63,8 @@ Both are variable, free, and self hosted through `next/font`. Two families is th
   afford a second glance.
 - **No bold serif anywhere**, including the largest question. Emphasis is size and space. A bold
   serif headline shouts and this product does not shout.
-- Tabular numerals on the facts and the countdown, so neither jitters as it changes.
+- Tabular numerals on the countdown, so it does not jitter as it changes. The same applies to
+  the facts roles above if they are ever reinstated.
 - Measure caps are hard limits. The question wraps to two or three short lines, never one long
   one, because a question read once before speaking has to be graspable in a single glance.
 - No all caps except chips and small section labels, and there with modest letter spacing.
@@ -118,7 +119,7 @@ Exactly three places in the product:
 ### 3.3 Forbidden
 
 - No colour on the feedback screen except `ink`, `muted` and `rule`. The transcript rails stay
-  hairlines, the facts stay ink, the gap question stays ink. The accent appears there only on
+  hairlines and the gap question stays ink. The accent appears there only on
   the chips.
 - **No red, amber or green used as judgement anywhere.** No coloured pace ranges, no traffic
   lights, no good or bad states, no gauges. No score is shown in Phase 1 (FR-23) and a coloured
