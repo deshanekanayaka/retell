@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# third-party design skills, installed with `npx skills add`
+# Not tracked: large, someone else's work, and skills-lock.json pins the exact
+# versions so any machine can restore them with `npx skills experimental_install`.
+.claude/skills/
