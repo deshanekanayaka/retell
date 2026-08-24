@@ -80,7 +80,7 @@ Warm paper, deep moss, one red used twice.
 | `surface` | `#FAFAF5` | Cards, the transcript field |
 | `ink` | `#1A1D19` | Headings, questions, transcript text |
 | `ink-soft` | `#3F443C` | Secondary prose, the countdown |
-| `muted` | `#6D736A` | Rail labels, facts labels, small captions |
+| `muted` | `#696F66` | Rail labels, facts labels, small captions |
 | `rule` | `#DBD9D1` | Hairlines, dividers, transcript rails |
 | `accent` | `#2F5D45` | Deep moss |
 | `accent-press` | `#244936` | Pressed state |
@@ -105,11 +105,15 @@ no fill.
 
 ### 3.2 Where live red is allowed
 
-Exactly twice in the product, both times literally:
+Exactly three places in the product:
 
 1. An 8px solid dot beside the countdown while recording. No pulse, no glow, no ring, no red
    border, no red field.
-2. The confirm control in the delete flow. Never the resting Delete button.
+2. The confirm control in a delete flow. Never the resting Delete button for a single recording.
+3. The resting "Delete everything" account-deletion control, as an exception to rule 2. Account
+   deletion is the one irreversible, whole-account action in the product, so the resting button
+   carries the warning too, not only its confirm step (which still opens as a separate popup,
+   never inline).
 
 ### 3.3 Forbidden
 
@@ -126,8 +130,16 @@ Exactly twice in the product, both times literally:
 
 ### 3.4 Checks
 
-- Body text clears 4.5 to 1 against its background. Hairlines clear 3 to 1, and never carry
-  meaning alone; the margin label carries it.
+- Body text clears 4.5 to 1 against its background. This is why `muted` is `#696F66` and not
+  something lighter: at 4.51 to 1 on `ground` it is the darkest the small-caption grey is
+  allowed to be, and anything lighter fails the rule above.
+- **Hairlines are deliberately below 3 to 1.** `rule` on `ground` measures 1.23 to 1, and that
+  is intentional, not an oversight. WCAG's 3 to 1 applies to controls and to graphics that
+  carry information; a divider that only separates is exempt. The exemption is only honest
+  while the rule below holds, so it is a hard constraint, not a note:
+- **A hairline never carries meaning alone.** The margin label, the heading, or the spacing
+  carries it. Anything that would break if the line were invisible has to be redrawn, because
+  for some readers it effectively is.
 - Convert a screen to greyscale. If two elements merge, the contrast is wrong, not the hue.
 
 ### 3.5 Themes
@@ -199,16 +211,11 @@ equal weighting of the three controls, and the two secondary actions stay plainl
 The only feedback during recording, so it proves the microphone is live without being worth
 watching. If it is beautiful, users watch it instead of thinking about their answer.
 
-- Bars 3px wide, 3px gap, height driven by real amplitude. Never even height bars, which read as
-  a barcode.
+- A continuous wave, one line, height driven by real amplitude, redrawn live. Not bars.
 - `muted` colour. No accent, no gradient, no glow, no mirroring around a centre line. Mirrored
   waveforms look like audio software and invite admiration.
 - Fast attack, slow decay, so it does not jitter frame to frame.
-- Scrolls right to left showing roughly the last five seconds. A scrolling trace leaves visible
-  evidence that the user has been speaking, which is quietly reassuring sixty seconds into
-  talking about yourself. Updating in place shows only the current instant and reads as an
-  instrument.
-- Minimum bar height held at all times while the microphone is live (04 section 1.2).
+- Minimum amplitude held at all times while the microphone is live (04 section 1.2).
 
 ### 5.2 Everything else
 
