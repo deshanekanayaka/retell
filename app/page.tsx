@@ -126,11 +126,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* B10 of the landing skill wants privacy and terms links here, and
-          docs/06 makes commitments a user should be able to read. No privacy
-          page exists yet, and a link to nowhere is worse than no link, so the
-          footer stays empty until screen 17 is built. Tracked in
-          context/screens.md. */}
+      <footer className="border-t border-rule py-8">
+        <div className="mx-auto w-full max-w-215 px-12">
+          <Link href="/privacy" className="font-sans text-sm text-muted underline">
+            Privacy
+          </Link>
+        </div>
+      </footer>
     </div>
   );
 }

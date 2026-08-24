@@ -146,7 +146,7 @@ flowchart TD
     AS -- yes --> X[Schedule unchanged<br/>FR-31]
     AS -- no --> R[(review row<br/>next due date<br/>FR-28)]
 
-    T --> FB[Feedback shown to user<br/>transcript, one gap,<br/>duration and pace, labels<br/>FR-22]
+    T --> FB[Feedback shown to user<br/>transcript, one gap,<br/>labels<br/>FR-22]
     SIG --> FB
     SC -. never shown in Phase 1<br/>FR-23 .-> FB
 

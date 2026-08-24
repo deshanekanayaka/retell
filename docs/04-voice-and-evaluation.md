@@ -142,7 +142,8 @@ Rejected: any dimension that cannot be seen in the text. Scoring "cultural fit" 
 from a transcript produces a number that means nothing, and Retell does not tell users things
 about themselves it cannot support.
 
-Duration and pace are not scored. They are facts, reported as facts.
+Duration and pace are not scored, and since ADR-016 they are not shown to the user either.
+They are computed and stored under FR-17 for grading, calibration and validation.
 
 ### 3.2 Scoring anchors
 
@@ -223,15 +224,19 @@ Then, after every answer, in this order (FR-22):
 1. **Their transcript**, their own words, with the situation, action and result parts
    highlighted where they exist.
 2. **The gap**, as a question. "You told me what the team did. What did you do?"
-3. **The facts**: how long they spoke, and their pace. Numbers presented as numbers.
-4. **The labels**: which question types this story now covers. "That works for conflict and for
+3. **The labels**: which question types this story now covers. "That works for conflict and for
    communication."
+
+**Not shown in Phase 1: duration or pace** (ADR-016). They were specified as a fourth block and
+removed after seeing them on screen: a number about the user's performance, shown right under
+the gap, competes with the one thing they are meant to act on and reads as a score whatever the
+label says.
 
 **Not shown in Phase 1: any score** (FR-23). The three numbers are stored from day one because
 the scheduler and calibration need them, and because a rubric cannot be validated against data
 that was never collected. A number on screen turns daily practice into a verdict.
 
-Point 4 does the emotional work. It is the only thing on the screen that tells a student who
+Point 3 does the emotional work. It is the only thing on the screen that tells a student who
 believes they have no experience that one bad week on a group project is two interview answers.
 
 **One column, every viewport.** The order above is a requirement, not a preference, so the screen
