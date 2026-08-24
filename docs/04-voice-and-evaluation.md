@@ -183,7 +183,13 @@ The prompt is a contract as much as the schema is. Fixed rules:
 
 ## 4. What the user sees
 
-After every answer, in this order (FR-22):
+The question they answered sits at the top of the screen, quiet, above everything else. It is
+context, not content: without it the transcript is an answer to nothing, and a user returning to
+the screen later has no idea what they were asked. It is set small enough that it never competes
+with the gap question further down, which is the question the user acts on. Two questions on one
+screen is a real risk, and the size difference is what resolves it.
+
+Then, after every answer, in this order (FR-22):
 
 1. **Their transcript**, their own words, with the situation, action and result parts
    highlighted where they exist.
@@ -198,6 +204,79 @@ that was never collected. A number on screen turns daily practice into a verdict
 
 Point 4 does the emotional work. It is the only thing on the screen that tells a student who
 believes they have no experience that one bad week on a group project is two interview answers.
+
+**One column, every viewport.** The order above is a requirement, not a preference, so the screen
+never splits into columns, including on desktop. A two column layout puts the gap beside the
+transcript rather than after it, and since the gap is the largest object on the screen the eye
+reaches it first. Reading the one thing missing before reading your own words changes how you
+read your own words. The content column keeps the same measure as the phone layout, centred, so
+the transcript stays near 62 characters a line.
+
+### 4.1 How the transcript is marked
+
+The three parts are marked with a hairline rule down the left of the marked passage and a label
+in the margin. The words themselves are never touched: no highlighter fill, no underline, no
+reflowing of what was said into tidier paragraphs.
+
+**Labels are plain, never the framework words.** In the margin, in sentence case:
+
+| Part | Label shown |
+| --- | --- |
+| situation | the setting |
+| action | what you did |
+| result | how it ended |
+
+Rejected: "Situation", "Action", "Result". Naming the framework invites the user to notice that
+Task is absent and conclude the product has STAR wrong, rather than that it deliberately marks
+three parts. Plain labels invoke no framework, so nothing looks missing from one.
+
+**Task is not a fourth part.** The reason Task matters, that the speaker names what they were
+personally on the hook for, is already carried by the `specificity` ladder in section 3.2, where
+the 2 to 3 boundary is exactly whether the speaker's own contribution is clear. Adding a fourth
+part would ask the model to draw a line between situation and task that speakers do not draw
+when talking, and would put four rails on an answer of roughly 140 words.
+
+**One rail per part, on the clearest instance, not on every occurrence.** Speech backtracks, so
+the three parts frequently arrive interleaved rather than in blocks. Marking every occurrence
+shreds a sixty second answer into six or seven fragments and destroys the calm the treatment
+exists for. Each part gets one rail, placed on the longest run of speech carrying it.
+
+**A part the answer does not contain gets no rail and no label.** No empty row, no greyed
+placeholder, no missing marker. The absence in the margin is the whole signal, and the gap
+question directly above it is already asking for the part that is not there. Drawing an empty
+labelled rail says the same thing a second time in a colder voice, and an unticked box on
+someone's own words is close to marking them down, which section 5 rules out.
+
+### 4.2 Answering again
+
+The gap question is a question, so the screen has to let the user answer it. Without that, it is
+posed and then abandoned, which reads as being left hanging at the one moment the user is most
+exposed.
+
+**One action, directly beneath the gap question**, not in the footer with the other two. Copy:
+"Have another go at this one". An invitation, never an instruction, and never phrased in a way
+that implies the first attempt failed.
+
+Placement is the decision. In the footer it becomes a third equal option sitting a long way from
+the thing it responds to. Directly under the gap it reads as the answer to the question.
+
+**It re-asks the original question, not the gap question.** The gap is generated per answer and is
+not in the question bank, and answering it as a short follow up would break the one answer equals
+one unit model the rest of the product rests on (section 5). The original question is re-asked
+with the gap still visible.
+
+**Never an example answer, a suggested phrasing, or a sentence starter here.** ADR-009 rules it
+out everywhere, and the reason is sharpest on this screen: anything placed next to a user's own
+transcript at the moment they feel caught short becomes the thing they repeat in a real
+interview. The worked example in section 1.1 is for the permission denial screen, where the user
+has not spoken yet and has nothing to copy against.
+
+Guidance about form is still allowed, since that is elicitation rather than content. One neutral
+line under the gap: "There is no right answer to this. Just say what you personally did."
+
+**Open, and owned by Deshan, not needed before Phase 2.** When an item is graded, whether a second
+attempt replaces the first or the first stands. Recorded here so it is not decided by accident in
+code. Both attempts are stored either way, since raw audio is never lost.
 
 ## 5. Recovery when an answer fails
 
