@@ -21,7 +21,7 @@ is finished for what it is, not half-done.
 
 | # | Screen | Route | Status | Ships in | Gap |
 | --- | --- | --- | --- | --- | --- |
-| 01 | Landing | `/` | Live | S5, shipped early | Privacy link has no destination |
+| 01 | Landing | `/` | Live | S5, shipped early | none |
 | 02 | Browser gate | any route, non-Chrome | Live | S1 | In-app browser detection deferred (FR-35, ADR-012) |
 | 03 | Permission explainer | `/record` | Live | S1 | none |
 | 04 | Permission denied | `/record` after denial, preview at `/screens/permission-denied` | Partial | S1 | Worked example is a placeholder block. Founder-authored copy pending, tracked in tasks.md |
@@ -31,7 +31,7 @@ is finished for what it is, not half-done.
 | 08 | Recording | `/record` | Live | S1 | none |
 | 09 | Processing | `/record` while uploading, preview at `/screens/processing` | Live | S1 | Waits on upload only. Nothing is transcribed or evaluated yet (S2, S3) |
 | 10 | Recovery | `/screens/recovery` | Static | S6 | Not triggered by anything. The under-15-second rule is S6 (FR-10) |
-| 11 | Feedback | `/screens/feedback` | Static | S3 | Transcript, gap and chips are placeholders. **Duration and pace are absent, which under-ships FR-22** (see below) |
+| 11 | Feedback | `/screens/feedback` | Static | S3 | Transcript, gap and chips are placeholders |
 | 11b | Feedback, no result | `/screens/feedback/no-result` | Static | S3 | Same as 11 |
 | 12 | Signup | `/screens/signup` | Static | S4 | Input is disabled. No submit, no account creation |
 | 13 | Session end after skips | `/screens/session-end` | Static | S6 | Skip counting is S6 (FR-11) |
@@ -39,7 +39,7 @@ is finished for what it is, not half-done.
 | 15 | Stories list | `/screens/stories` | Static | S4 | Stories are placeholders. No real story data exists yet |
 | 15b | Stories list, empty | `/screens/stories/empty` | Static | S4 | Same as 15 |
 | 16 | Recordings and privacy | `/screens/recordings-privacy` | Static | S6 | Download and delete do nothing. Deletion is FR-38 |
-| 17 | Privacy policy | none | **Missing** | undecided | Landing needs somewhere to link. Not scoped to any step yet |
+| 17 | Privacy | `/privacy` | Partial | undecided | Plain-language placeholder. Needs named processors, a contact route and formal terms before real users |
 
 Preview routes live under `/screens`, indexed at `/screens` itself, and are deliberately not
 linked from anything a real user reaches.
@@ -47,16 +47,16 @@ linked from anything a real user reaches.
 Two dev-only routes exist alongside them: `/dev/verify-recording` and `/dev/contrast-check`.
 Neither is product surface.
 
-## Two things worth a decision
+## Both open questions are now closed
 
-**FR-22 is currently under-shipped.** It requires the feedback screen to show, in order:
-transcript with parts highlighted, one gap as a question, **duration and pace as plain facts**,
-then the question types the story covers. The duration and pace block was removed from screens
-11 and 11b during design review. That is a real gap against a P1 requirement, not an oversight
-in the build, and it needs either the block restored or FR-22 amended before S3 is called done.
+**FR-22 was amended, not restored.** It required duration and pace as a third block on the
+feedback screen. That block was removed during design review, and rather than put it back the
+requirement changed: ADR-016 records why, and docs/01, 02, 04 and 07 were updated in the same
+change. Duration and pace are still computed and stored under FR-17, which is untouched.
 
-**Screen 17 does not exist.** The landing page has no privacy destination, and docs/06 makes
-commitments a user should be able to read. It belongs to no delivery step right now.
+**Screen 17 now exists** at `/privacy`, as a plain-language placeholder built only from what
+docs/06 already commits to. It states that it is not a finished legal document rather than
+pretending otherwise, and lists what is still missing.
 
 ## Keeping this honest
 
