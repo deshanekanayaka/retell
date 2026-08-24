@@ -49,6 +49,13 @@ denial screen rather than staying silent (ADR-014).
 - Restart before submitting is free and always visible.
 - Stopping early keeps the answer.
 - A live waveform shows the microphone is working. This is the only feedback during recording.
+  It never flatlines while the microphone is live: a minimum bar height is held even in silence,
+  because a flat trace during a thinking pause reads as "it stopped recording" at the moment the
+  user is least sure of themselves.
+- At ten seconds, one line appears beneath the countdown: "about 10 seconds remaining". The
+  number itself never changes colour, size or weight, and nothing turns red. The answer is kept
+  at zero, so there is nothing to be urgent about, and fake urgency is a non-goal
+  (01-PRD.md section 5).
 - Audio is uploaded directly from the browser to object storage with a signed URL, never
   proxied through an API route.
 

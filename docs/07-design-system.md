@@ -1,0 +1,237 @@
+# 07: Design System
+
+Product: Retell
+Status: Draft for approval
+Owner: Deshan Ekanayaka (engineer of record)
+Version: 0.1
+
+Owns type, colour, shape, spacing, icons and motion. What each screen contains is owned by
+01-PRD.md and 04-voice-and-evaluation.md; this document owns how it looks and behaves.
+
+A voice and tone section belongs here and is not written yet. It is blocked on the open
+question in 04 section 3.4, whether evaluation tone warms with the rest of the product.
+
+## 1. The idea underneath it
+
+Both obvious reference products, Duolingo and every language app shaped like it, are tap apps.
+The user is looking at the screen and visual delight is the reward.
+
+On Retell's most important screen the user's eyes are not on the screen. They are talking,
+probably alone, probably self conscious. Every pixel of visual interest during those sixty
+seconds competes with the act.
+
+**So the most important screen in the product is the least designed one, and the craft budget
+goes to the screens either side of it.** Every rule below follows from that.
+
+## 2. Type
+
+**Fraunces** for the human voice. **Instrument Sans** for the system voice.
+
+Serif carries the question asked of the user, the mic check sentence, the gap question, and the
+user's own transcript. Sans carries everything the product says about itself: buttons, labels,
+facts, chips, navigation, settings.
+
+The reason is that Retell's screens are mostly one sentence on an empty field, so the sentence
+is the interface. A serif at large size reads as something a person wrote to you. A neutral sans
+at large size reads as a system prompt, and a rounded sans reads as a game. It also means the
+user's own transcript is set in the same face as the question, which says visually that their
+words and ours are the same class of thing.
+
+Both are variable, free, and self hosted through `next/font`. Two families is the cap.
+
+### 2.1 Scale
+
+| Role | Family | Mobile | Desktop | Weight | Line height | Measure |
+| --- | --- | --- | --- | --- | --- | --- |
+| Question, ready and recording | Serif | 32px | 42px | 400 | 1.2 | 22ch |
+| Mic check sentence | Serif italic | 30px | 38px | 400 | 1.3 | 24ch |
+| The gap question | Serif | 28px | 34px | 400 | 1.25 | 28ch |
+| Permission heading | Serif | 28px | 34px | 400 | 1.25 | 20ch |
+| Question as context, feedback screen | Serif | 17px | 17px | 400 | 1.4 | 46ch |
+| Transcript body | Serif | 18px | 19px | 400 | 1.7 | 62ch |
+| Body and explainer copy | Sans | 16px | 16px | 400 | 1.55 | 56ch |
+| Buttons | Sans | 17px | 17px | 500 | 1.2 | n/a |
+| Facts, the numbers | Sans, tabular | 26px | 30px | 500 | 1.1 | n/a |
+| Facts, the labels | Sans | 13px | 13px | 500 | 1.3 | n/a |
+| Transcript rail labels | Sans | 12px | 12px | 500 | 1.3 | n/a |
+| Chips and small labels | Sans | 13px | 13px | 500 | 1.2 | n/a |
+| Countdown | Sans, tabular | 22px | 22px | 400 | 1 | n/a |
+
+### 2.2 Rules
+
+- Nothing below 13px. Body never below 16px. A user reading a question then looking away cannot
+  afford a second glance.
+- **No bold serif anywhere**, including the largest question. Emphasis is size and space. A bold
+  serif headline shouts and this product does not shout.
+- Tabular numerals on the facts and the countdown, so neither jitters as it changes.
+- Measure caps are hard limits. The question wraps to two or three short lines, never one long
+  one, because a question read once before speaking has to be graspable in a single glance.
+- No all caps except chips and small section labels, and there with modest letter spacing.
+- Italic is reserved for the mic check sentence, marking it as a thing to read aloud rather than
+  a thing to understand. It is the only italic in the product.
+
+## 3. Colour
+
+Warm paper, deep moss, one red used twice.
+
+| Token | Value | Role |
+| --- | --- | --- |
+| `ground` | `#EFF0EA` | Page background, every screen. Never pure white |
+| `surface` | `#FAFAF5` | Cards, the transcript field |
+| `ink` | `#1A1D19` | Headings, questions, transcript text |
+| `ink-soft` | `#3F443C` | Secondary prose, the countdown |
+| `muted` | `#6D736A` | Rail labels, facts labels, small captions |
+| `rule` | `#DBD9D1` | Hairlines, dividers, transcript rails |
+| `accent` | `#2F5D45` | Deep moss |
+| `accent-press` | `#244936` | Pressed state |
+| `live` | `#C43C2B` | Two permitted uses only, section 3.2 |
+
+Ruled out, and why: blue and violet accents, cool grey grounds and near black with an acid pop
+are the three looks that read as generated. A cream ground with a serif and a terracotta accent
+is the fourth, and having chosen a serif we were closest to it. Yellow and orange are playful
+and attention grabbing, wrong for a screen the user should be able to ignore while talking.
+Dark blue is the generic professional answer. Black is the wrong kind of serious.
+
+**On green.** Duolingo owns bright yellow green in daily habit learning. Ours is dark,
+desaturated, and used only on controls, never as a field or a celebration, so the two are not
+confusable. The stronger risk is that green means correct; that is handled by the usage rules
+below, not by the hue.
+
+### 3.1 Where accent is allowed
+
+Primary buttons, the record control, focus rings, and the story chips on the feedback screen.
+Nowhere else. Secondary controls (Skip this one, Start again, Not now) are `ink-soft` text with
+no fill.
+
+### 3.2 Where live red is allowed
+
+Exactly twice in the product, both times literally:
+
+1. An 8px solid dot beside the countdown while recording. No pulse, no glow, no ring, no red
+   border, no red field.
+2. The confirm control in the delete flow. Never the resting Delete button.
+
+### 3.3 Forbidden
+
+- No colour on the feedback screen except `ink`, `muted` and `rule`. The transcript rails stay
+  hairlines, the facts stay ink, the gap question stays ink. The accent appears there only on
+  the chips.
+- **No red, amber or green used as judgement anywhere.** No coloured pace ranges, no traffic
+  lights, no good or bad states, no gauges. No score is shown in Phase 1 (FR-23) and a coloured
+  number is a score.
+- No green used to mean correct, complete or good. No ticks, no success states.
+- No gradients, no coloured shadows, no tinted glass, no accent coloured backgrounds behind
+  large areas.
+- No second accent hue, for any reason.
+
+### 3.4 Checks
+
+- Body text clears 4.5 to 1 against its background. Hairlines clear 3 to 1, and never carry
+  meaning alone; the margin label carries it.
+- Convert a screen to greyscale. If two elements merge, the contrast is wrong, not the hue.
+
+### 3.5 Themes
+
+**Phase 1 ships light only.** Every colour is a token so a dark theme is a swap later, but a
+second theme is not designed, tested or QA'd for a validation build running on desktop Chrome
+with 40 to 60 recruited students. Doing it properly costs about a day plus drag on every screen
+after; doing it badly produces the unreadable dark mode bug on the screen where the user is
+already anxious.
+
+## 4. Shape, spacing, stroke, icons
+
+**Radius.** One value, 4px, on buttons, cards and inputs. Chips are full pill, because a pill
+reads as a label and a 4px chip reads as a small button. 0px reads brutalist and fights the
+warmth in the copy; 8 to 12px is the generated-app default.
+
+**Stroke.** Exactly two weights: 1px for every hairline (rules, dividers, outlined buttons,
+transcript rails) and 1.5px for icon strokes. No 2px borders, no double rules.
+
+**Shadows.** None, anywhere. Surfaces separate with a 1px rule and the step from `ground` to
+`surface`. Shadow is how app UIs say "card" and this product says "paper".
+
+**Icons.** Retell needs five: microphone, download, delete, close, chevron, and three of those
+appear only on the recordings and privacy screen. So: **text labels wherever a label fits**, and
+an icon only where one genuinely does not. This kills the single biggest generated-app tell for
+free, since the tell is a set of hairline icons rather than any one icon. Where an icon is
+unavoidable it is solid filled at 20px, never a hairline outline. Filled shapes read as drawn;
+outlines read as installed.
+
+**Spacing.** 4px base unit. Scale: 4, 8, 12, 16, 24, 32, 48, 64, 96. Nothing off the scale.
+
+| Context | Value |
+| --- | --- |
+| Page padding, mobile | 24px |
+| Page padding, desktop | 48px |
+| Content column max width | 620px |
+| Between feedback blocks | 32px, with a 1px rule |
+| Label to its content | 8px |
+| Button padding | 14px vertical, 24px horizontal |
+| Minimum touch target | 44px |
+| Above and below the gap question | 40px |
+
+The last row is the one deliberate irregularity. The gap question gets more air than its
+neighbours because it is the one thing on the screen the user has to act on.
+
+### 4.1 The record control
+
+A circle, 88px on mobile and 96px on desktop, filled `accent`, no border, with a solid filled
+microphone glyph inside at 32px in `surface`.
+
+**A text label sits directly beneath it**: "Start recording" on the question screen, "Read it out
+loud" on the mic check. The circle is the hardware convention and the label is what stops it
+being a guessing game, which matters against the 45 second clock in FR-1. Identical control in
+the identical place on both screens, so the step from mic check to first real question is muscle
+memory.
+
+Pressed state fills `accent-press`. Focus is a 2px accent ring at 3px offset, never a browser
+default outline. No red, no pulse, no ring animation at rest.
+
+**While recording the circle stays put and changes state**: outlined accent circle with a filled
+square glyph for Stop, in the same position, with "Start again" and "Skip this one" as plain
+text buttons beneath. Continuity of the one object the user is looking at is worth more than
+equal weighting of the three controls, and the two secondary actions stay plainly available.
+
+## 5. Motion
+
+### 5.1 The waveform
+
+The only feedback during recording, so it proves the microphone is live without being worth
+watching. If it is beautiful, users watch it instead of thinking about their answer.
+
+- Bars 3px wide, 3px gap, height driven by real amplitude. Never even height bars, which read as
+  a barcode.
+- `muted` colour. No accent, no gradient, no glow, no mirroring around a centre line. Mirrored
+  waveforms look like audio software and invite admiration.
+- Fast attack, slow decay, so it does not jitter frame to frame.
+- Scrolls right to left showing roughly the last five seconds. A scrolling trace leaves visible
+  evidence that the user has been speaking, which is quietly reassuring sixty seconds into
+  talking about yourself. Updating in place shows only the current instant and reads as an
+  instrument.
+- Minimum bar height held at all times while the microphone is live (04 section 1.2).
+
+### 5.2 Everything else
+
+- **Countdown:** no animation at all. No depleting ring, no colour change, no pulse, no scale on
+  each tick. The ten second line is in 04 section 1.2.
+- **Processing:** no spinner. A 1px hairline sweeping left to right on a two second loop in
+  `rule` colour, under the waiting line. Spinners are the generated-app default and imply an
+  unbounded wait.
+- **Screen transitions:** 120ms opacity crossfade, nothing else. No slide, no spring, no shared
+  element. A slide implies a wizard with a beginning and an end; this is a loop run daily.
+- **The feedback screen appears complete.** No staggered reveal, no rails drawing themselves in,
+  no chips arriving one at a time. An animated reveal is a small celebration and 04 section 3.4
+  fixes that screen's tone as level.
+- **Button press** is a 100ms colour change. That is the whole interaction vocabulary.
+
+### 5.3 Never
+
+Confetti, celebration, bounce, spring easing, scale on press, skeleton shimmer, numbers counting
+up, anything that pulses to draw attention.
+
+### 5.4 Reduced motion
+
+`prefers-reduced-motion` removes the crossfade and freezes the processing sweep into a static
+line. The waveform stays, because it is functional feedback rather than decoration, but drops
+the scroll and becomes a single level bar rising and falling in place. Proof the microphone is
+live is the accessibility floor here, not the animation.
