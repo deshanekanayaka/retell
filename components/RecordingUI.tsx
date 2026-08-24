@@ -2,16 +2,30 @@
 
 import { useEffect, useRef, useReducer, useState } from "react";
 import { Waveform } from "@/components/Waveform";
-import { initialRecordingState, recordingReducer } from "@/lib/recording-state";
+import { Button } from "@/components/ui/Button";
+import { RecordControl } from "@/components/ui/RecordControl";
+import {
+  initialRecordingState,
+  recordingReducer,
+  type RecordingStatus,
+} from "@/lib/recording-state";
 import { createRecordingRow, type RecordingType } from "@/lib/supabase/recordings";
 import { createSignedUploadUrl } from "@/lib/supabase/storage";
 import { uploadToSignedUrl } from "@/lib/supabase/upload";
 
 const RECORDING_SECONDS = 60;
 
+const STATUS_ANNOUNCEMENTS: Record<RecordingStatus, string> = {
+  idle: "",
+  recording: "Recording. About a minute.",
+  review: "Recording stopped.",
+  uploading: "Saving your answer.",
+  done: "Saved.",
+};
+
 // One take's MediaRecorder lifecycle, isolated in its own component so a
 // restart is a clean remount (a fresh key from the parent) rather than a
-// manual state reset — sidesteps both the "reset local state on dependency
+// manual state reset. Sidesteps both the "reset local state on dependency
 // change" anti-pattern and, via the stoppedIntentionally guard, a discarded
 // take's late-firing onstop from ever reaching the parent.
 function RecordingTake({
@@ -72,12 +86,25 @@ function RecordingTake({
   }, []);
 
   return (
-    <div>
-      <p>{secondsRemaining}s left</p>
+    <div className="flex flex-col items-center gap-8">
+      <div className="flex flex-col items-center gap-2">
+        <div className="flex items-center gap-2">
+          {/* The red dot is the only live-red in the product outside a delete
+              flow (docs/07 3.2). It carries no meaning colour alone must
+              carry, so the countdown text beside it states the same fact. */}
+          <div className="h-2 w-2 rounded-full bg-live" aria-hidden="true" />
+          <span className="font-sans text-[22px] leading-none tabular-nums text-ink-soft">
+            {secondsRemaining}
+          </span>
+        </div>
+        <span className="font-sans text-[13px] leading-tight text-muted">
+          about {secondsRemaining} seconds remaining
+        </span>
+      </div>
+
       <Waveform stream={stream} active />
-      <button type="button" onClick={() => requestStopRef.current()}>
-        Stop
-      </button>
+
+      <RecordControl state="recording" label="Stop" onClick={() => requestStopRef.current()} />
     </div>
   );
 }
@@ -86,20 +113,23 @@ export function RecordingUI({
   stream,
   recordingType,
   onDone,
+  onStatusChange,
 }: {
   stream: MediaStream;
   recordingType: RecordingType;
   onDone?: () => void;
+  onStatusChange?: (status: RecordingStatus) => void;
 }) {
   const [state, dispatch] = useReducer(recordingReducer, initialRecordingState);
   const blobRef = useRef<Blob | null>(null);
   const [uploadFailed, setUploadFailed] = useState(false);
 
   useEffect(() => {
+    onStatusChange?.(state.status);
     if (state.status === "done") {
       onDone?.();
     }
-  }, [state.status, onDone]);
+  }, [state.status, onDone, onStatusChange]);
 
   function handleStopped(blob: Blob) {
     blobRef.current = blob;
@@ -127,45 +157,71 @@ export function RecordingUI({
     }
   }
 
+  // A stable status region, rendered in every state so repeated polite
+  // announcements land reliably. It carries state transitions only, never the
+  // ticking countdown, which would announce once a second.
+  const statusRegion = (
+    <p role="status" aria-live="polite" className="sr-only">
+      {STATUS_ANNOUNCEMENTS[state.status]}
+    </p>
+  );
+
   if (state.status === "idle") {
+    const label = recordingType === "mic_check" ? "Read it out loud" : "Start recording";
     return (
-      <button type="button" onClick={() => dispatch({ type: "start" })}>
-        Start recording
-      </button>
+      <>
+        {statusRegion}
+        <RecordControl state="idle" label={label} onClick={() => dispatch({ type: "start" })} />
+      </>
     );
   }
 
   if (state.status === "recording") {
     return (
-      <div>
+      <div className="flex flex-col items-center gap-6">
+        {statusRegion}
         <RecordingTake key={state.take} stream={stream} onStopped={handleStopped} />
-        <button type="button" onClick={() => dispatch({ type: "restart" })}>
-          Restart
-        </button>
+        <Button variant="secondary" onClick={() => dispatch({ type: "restart" })}>
+          Start again
+        </Button>
       </div>
     );
   }
 
   if (state.status === "review") {
     return (
-      <div>
-        <p>Review your answer.</p>
+      <div className="flex flex-col items-center gap-6">
+        {statusRegion}
+        <p className="font-sans text-base text-ink-soft">Review your answer.</p>
         {uploadFailed && (
-          <p>That didn&apos;t upload. Your recording is still here — try again.</p>
+          <p className="font-sans text-base text-ink-soft">
+            That didn&apos;t upload. Your recording is still here, try again.
+          </p>
         )}
-        <button type="button" onClick={handleSubmit}>
-          Submit
-        </button>
-        <button type="button" onClick={() => dispatch({ type: "restart" })}>
-          Restart
-        </button>
+        <Button onClick={handleSubmit}>Submit</Button>
+        <Button variant="secondary" onClick={() => dispatch({ type: "restart" })}>
+          Start again
+        </Button>
       </div>
     );
   }
 
   if (state.status === "uploading") {
-    return <p>Uploading...</p>;
+    return (
+      <div className="flex flex-col items-center gap-6 px-12">
+        {statusRegion}
+        <p className="font-sans text-base text-ink-soft">Give me a few seconds with that.</p>
+        <div className="relative h-px w-45 overflow-hidden bg-rule">
+          <div className="processing-sweep absolute h-px w-14 bg-ink-soft" />
+        </div>
+      </div>
+    );
   }
 
-  return <p>Done. Thank you.</p>;
+  return (
+    <>
+      {statusRegion}
+      <p className="font-sans text-base text-ink-soft">Done. Thank you.</p>
+    </>
+  );
 }
