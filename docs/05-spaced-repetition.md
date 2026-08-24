@@ -181,7 +181,8 @@ weak, no item is untried.
 
 Streak and one optional daily reminder (FR-33).
 
-Rules, from the boundaries in 01-PRD.md section 5:
+Rules, from the boundaries in 01-PRD.md section 5. All copy in this layer answers to
+07-design-system.md section 6:
 
 - No guilt, no loss framing, no fake urgency, no shaming a missed day.
 - A streak may be lost quietly. It is never used as a threat.
@@ -234,31 +235,24 @@ making returning feel worth it? If it is the first, it does not ship.
   user is.
 - Notification copy referencing anything the user stands to lose.
 
-### 7.3 The commitment moment
+### 7.3 Rejected: the commitment moment
 
-At the end of session one only, one screen asking when they will do tomorrow's session. Three or
-four time choices and a visible decline. Choosing sets the reminder time. Declining means no
-reminder and no second ask, ever.
+Proposed and rejected. At the end of session one, one screen asking when the user would do
+tomorrow's session, with a visible decline, setting the reminder time. The mechanism is
+implementation intention, it passes the test in 7.2, and it was the strongest legitimate
+mechanic available.
 
-The mechanism is implementation intention: making the next occasion concrete. It works by
-specifying the opportunity, not by making the alternative painful, which is why it passes the
-test in 7.2 when a streak warning does not.
+**Rejected because if the product is good enough, people return without being asked.** Recorded
+here rather than deleted, so it is not re-proposed as a new idea later.
 
-Rules:
+There is a second argument for the rejection that is worth keeping. Phase 1 exists to measure
+whether people come back on day four. With no habit scaffolding of any kind, that number is the
+product's own pull and nothing else, which is a cleaner reading than a number produced with a
+commitment prompt sitting in front of it.
 
-- It appears after the first feedback screen, never before. FR-1 puts a clock on reaching a
-  microphone and nothing may be inserted ahead of that.
-- The decline is the same size and weight as the choices (7.2, on pre-selection).
-- Nothing is pre-selected.
-- The copy stays a preference and never becomes an agreement. "When suits you tomorrow" is a
-  preference. "Promise you'll come back" is not.
-- Asked once in the product's lifetime.
-
-**Open, and blocking implementation, not the design.** FR-33 places the daily reminder in Phase 2,
-so a Phase 1 commitment screen would set a reminder time that nothing sends. Three ways out:
-ship this screen in Phase 2 alongside the reminder; ship it in Phase 1 as a stated intention with
-no notification behind it; or move the reminder to Phase 1, which is an FR change and Deshan's
-decision. Until that is settled this section describes the design, not a scheduled build.
+The cost is that it is the one legitimate mechanic we had, and the day 4 number will be the
+lower of the two possible readings. That cost is recorded in 03-delivery-plan.md section 8
+alongside the kill criteria.
 
 ### 7.1 The session end message
 

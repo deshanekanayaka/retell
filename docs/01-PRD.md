@@ -169,6 +169,9 @@ never renumbered.
 - **Scraped or leaked real company interview questions.**
 - **Guilt mechanics.** Streaks and reminders are permitted. Shame, loss framing and fake
   urgency are not.
+- **Praise inflation.** Warmth is required everywhere, but praise the work does not support is
+  not warmth. Generic encouragement teaches the user that nothing on the screen means anything.
+  Voice and tone are owned by 07-design-system.md section 6.
 - **iPhone support, payment, and sharing** are deferred to Phase 3 and are out of scope for
   Phase 1 and Phase 2.
 

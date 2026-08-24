@@ -8,8 +8,8 @@ Version: 0.1
 Owns type, colour, shape, spacing, icons and motion. What each screen contains is owned by
 01-PRD.md and 04-voice-and-evaluation.md; this document owns how it looks and behaves.
 
-A voice and tone section belongs here and is not written yet. It is blocked on the open
-question in 04 section 3.4, whether evaluation tone warms with the rest of the product.
+Voice and tone are owned here too, in section 6. Everything that writes user-facing words in
+this repo defers to it.
 
 ## 1. The idea underneath it
 
@@ -235,3 +235,63 @@ up, anything that pulses to draw attention.
 line. The waveform stays, because it is functional feedback rather than decoration, but drops
 the scroll and becomes a single level bar rising and falling in place. Proof the microphone is
 live is the accessibility floor here, not the animation.
+
+## 6. Voice and tone
+
+This section owns every user-facing word in the product. Where another document quotes fixed
+copy, that copy still answers to the rules here.
+
+### 6.1 The five rules
+
+**1. Warm everywhere, including the evaluation.** There is no screen where coldness is the
+correct register. The one thing that stays plain is the `gap` itself: a question about something
+absent, never wrapped in praise or apology (04 section 3.4).
+
+**2. Talk to the person, not at them.** Never answer an objection the user has not raised.
+Arguing with the reader, or justifying the product to them, reads as a rebuke. This is what made
+the original permission copy ("That's the point") land as a telling-off.
+
+**3. Lower the stake before asking for the effort.** Any screen that asks the user to speak says
+what does not count, before the control that starts it.
+
+**4. Warm never means vague.** Never soften a fact about what is about to happen. The user always
+knows they are being recorded and roughly for how long. A softened fact is a surprise deferred to
+a worse moment.
+
+**5. Never reassure with something untrue.** No praise the work does not support, no outcome
+claim, no privacy promise wider than what 06-data-and-privacy.md actually commits to.
+
+### 6.2 The test
+
+Would you say this out loud, in these words, to a nervous 21 year old sitting opposite you?
+
+If it would sound like a brochure, a teacher, or a cheerleader, it fails.
+
+### 6.3 Banned outright
+
+- Em dashes, anywhere, in prose, docs or UI.
+- Telling a user their answer is wrong. Weak, vague or unstructured, never wrong (FR-24).
+- The words "AI-powered" or "AI coach", or "AI" at all in user-facing copy.
+- Outcome language: hired, pass, ace, nail, succeed, land the job.
+- Competency words inside any question shown to a user (FR-6). They exist only as labels applied
+  afterwards.
+- Praise inflation: "great job", "amazing", "well done", exclamation marks, celebration copy.
+- Guilt, shame, loss framing and fake urgency (05 section 7.2).
+- Any number presented as a verdict on the user (FR-23).
+
+### 6.4 Worked examples
+
+| Instead of | Write |
+| --- | --- |
+| "That's the point." | "It's allowed to come out messy. That's what practice is for." |
+| "Your answer was too short." | "Let's try an easier way in." |
+| "Great answer! What did you do?" | "You told me what the team did. What did you do?" |
+| "Don't lose your streak." | "Tomorrow takes about five minutes." |
+| "You failed to give a result." | Nothing. Leave the rail undrawn and let the gap question ask. |
+| "Great work today!" | "You have 3 stories now. That covers most of a first round." |
+
+### 6.5 Register
+
+Plain, short, warm, level. Contractions throughout. Second person. Active voice. A control says
+exactly what happens. No slogans, no coaching language, no exclamation marks.
+

@@ -23,6 +23,7 @@ schedule, with twist questions that break memorised answers.
 - Recordings are private, never training data without opt in, deletable for real (docs/06).
 - No competency word ever appears in a question shown to a user (docs/01 FR-6).
 - No dark patterns on the habit layer (docs/01 section 5, docs/05 section 7).
+- Warm everywhere, praise nowhere it is not earned (docs/07 section 6).
 - Raw audio is never lost. Facts and judgements stored separately (docs/06 section 3).
 
 ## Where things are decided
@@ -36,6 +37,7 @@ schedule, with twist questions that break memorised answers.
 | Items, grading, scheduling, sessions, twists | docs/05-spaced-repetition.md |
 | Schema, retention, privacy promises | docs/06-data-and-privacy.md |
 | Why past decisions were made | docs/decisions/ |
+| Type, colour, motion, voice and tone | docs/07-design-system.md |
 | How we work | docs/workflow/development-workflow.md |
 
 ## Current phase

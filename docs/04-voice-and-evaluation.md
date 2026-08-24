@@ -14,7 +14,8 @@ is in 02-system-architecture.md section 3.2 and is not repeated here.
 ### 1.1 Permission
 
 Permission is requested once, from a full screen, after the user has been told what they are
-agreeing to (FR-2). The copy is a contract. It may be made warmer, it is never made vaguer:
+agreeing to (FR-2). The copy is a contract and answers to 07-design-system.md section 6. It may
+be made warmer, it is never made vaguer:
 
 > **You'll be saying this out loud.**
 > It's allowed to come out messy. That's what practice is for.
@@ -195,9 +196,19 @@ The prompt is a contract as much as the schema is. Fixed rules:
   claims they repeat in a real interview.
 - `gap` is one sentence, phrased as a question, about something absent from the answer. Never
   a judgement, never the word "wrong" (FR-24).
-- Tone is level. Not harsh, not congratulatory. A daily habit product that is harsh on day two
-  loses the user on day three.
-- The prompt is versioned. Any change to it increments `rubric_version` (FR-20).
+- Tone is warm, in line with 07-design-system.md section 6, which owns voice and tone for the
+  whole product. Warm means the words around the finding: plain, level with the reader, and
+  never cold about work someone was nervous to produce.
+- **Warm the frame, keep the gap plain.** The `gap` field itself is a question about something
+  absent and carries no praise, no softener and no compliment attached to it. "Really strong
+  answer! What did you do?" destroys both halves: the praise is unearned and the question stops
+  being taken seriously. Warmth belongs in the copy the product writes around the model's
+  output, not inside the model's finding.
+- No congratulation, no assessment of the person, no encouragement the answer does not support.
+  Praise that is not earned teaches the user that nothing on the screen means anything.
+- The prompt is versioned. Any change to it increments `rubric_version` (FR-20). This warming
+  happened before any answer had been evaluated, so it does not increment anything: the warmed
+  prompt is `rubric_version` 1, and there is no earlier version to be incomparable with.
 
 ## 4. What the user sees
 
@@ -321,7 +332,8 @@ Three consecutive skips ends the session with whatever was produced and one line
 easier.
 
 The rule beneath all of it: the product never says an answer was too short, too vague, or
-wrong. It asks an easier question.
+wrong. It asks an easier question. Wording throughout this section answers to
+07-design-system.md section 6.
 
 ## 6. Model and cost
 
