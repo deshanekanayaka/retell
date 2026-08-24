@@ -14,20 +14,31 @@ is in 02-system-architecture.md section 3.2 and is not repeated here.
 ### 1.1 Permission
 
 Permission is requested once, from a full screen, after the user has been told what they are
-agreeing to (FR-2). The copy is fixed and is not softened:
+agreeing to (FR-2). The copy is a contract. It may be made warmer, it is never made vaguer:
 
-> **You'll be speaking out loud.**
-> That's the point. Interview answers live in your mouth, not on a page.
+> **You'll be saying this out loud.**
+> It's allowed to come out messy. That's what practice is for.
 >
 > Your recordings stay on your account. Nobody else hears them.
-> The first one doesn't count. It's a mic check.
+> The first one is only a mic check. It doesn't count for anything.
 
 Button: **Turn on my microphone**
 
-Three deliberate choices. Naming the awkward thing pre-empts the surprise that causes denial.
-"Nobody else hears them" answers the real fear, which is being heard rather than privacy in the
-abstract. "The first one doesn't count" removes the performance stake before the decision is
-made.
+Four jobs, and a rewrite keeps all four. Naming the awkward thing before the browser prompt
+fires pre-empts the surprise that causes denial. "It's allowed to come out messy" answers the
+reason people actually abandon this screen, which is fear of sounding stupid rather than fear
+of speaking. "Nobody else hears them" answers the real privacy fear, which is being overheard
+rather than data handling in the abstract. "It doesn't count for anything" removes the
+performance stake before the decision is made.
+
+The button stays literal. Warmth belongs in the body copy, not in the control, because a vague
+button in front of a browser permission dialog is how a grant becomes a dismissal.
+
+**Superseded:** the original wording opened "You'll be speaking out loud. That's the point."
+and was marked fixed and not to be softened. "That's the point" answered an objection the user
+had not raised yet, which reads as a rebuke on the one screen that cannot afford one. Changed
+before the cohort test so that permission copy is not a moving variable while the mic check is
+being measured (03-delivery-plan.md section 4).
 
 Implementation is a plain button calling `navigator.mediaDevices.getUserMedia({ audio: true })`
 (ADR-014 — Chrome's declarative `usermedia` element was tried first but only supports combined
