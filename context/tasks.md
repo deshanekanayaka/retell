@@ -7,6 +7,10 @@ Steps are defined in docs/03-delivery-plan.md. There are no dates.
 
 ## Now
 
+- [ ] FR-22 gap: the feedback screen has no duration and pace block. It was removed during
+  design review, and FR-22 lists it as required. Restore it or amend FR-22 before S3 is done
+- [ ] Privacy page (screen 17). Does not exist, belongs to no step, and the landing footer
+  needs a destination. See context/screens.md
 - [ ] S2: Deepgram transcription with word timings and filler words (FR-16)
 - [ ] S2: compute duration, pace, longest pause, filler count (FR-17)
 - [ ] S3: lib/evaluate.ts, schema enforced, three scores (FR-19, FR-20, FR-21)
