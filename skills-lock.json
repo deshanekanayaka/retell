@@ -49,6 +49,12 @@
       "skillPath": "skills/better-ui/SKILL.md",
       "computedHash": "f383af38a3718c9f6884ace2d69191c8b7b6d633390873ed9074fe12a1fd3ade"
     },
+    "codebase-design": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/codebase-design/SKILL.md",
+      "computedHash": "5a17552cc1482f1a40124bf4e6c9dbd90ac0dbb47e71c07d47369f9e5f2ae3b5"
+    },
     "critique-affordance": {
       "source": "Owl-Listener/designer-skills",
       "sourceType": "github",
@@ -91,6 +97,12 @@
       "skillPath": "interaction-design/skills/doherty-threshold/SKILL.md",
       "computedHash": "d6078849033aeaf60d0675991a655b14b1d2d23449e16c694066fbd216b049c2"
     },
+    "domain-modeling": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/domain-modeling/SKILL.md",
+      "computedHash": "a11713c0ff7870efa3c331b2e273f09116158485246edc89ae5088eefd1b0b48"
+    },
     "emil-design-eng": {
       "source": "emilkowalski/skills",
       "sourceType": "github",
@@ -102,6 +114,12 @@
       "sourceType": "github",
       "skillPath": "interaction-design/skills/fitts-law/SKILL.md",
       "computedHash": "6e79798d5f6b731effde5055301127a173973da39da6b5746b9acfb2e7142aa3"
+    },
+    "grilling": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "skillPath": "skills/productivity/grilling/SKILL.md",
+      "computedHash": "4dd886b0196bf43729d954ae326016f2bd9f5f79d892500b407c33a753362f14"
     },
     "hicks-law": {
       "source": "Owl-Listener/designer-skills",
@@ -139,11 +157,23 @@
       "skillPath": "interaction-design/skills/millers-law/SKILL.md",
       "computedHash": "e3bbc272a87142d1544751568856e3133eb8815f5450e21b1fbff4f75f0f9763"
     },
+    "resolving-merge-conflicts": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/resolving-merge-conflicts/SKILL.md",
+      "computedHash": "63b2dcadbe9124caeb3448f1378286fe18dcefb2494f60e136831b8b4986ca27"
+    },
     "von-restorff-effect": {
       "source": "Owl-Listener/designer-skills",
       "sourceType": "github",
       "skillPath": "ui-design/skills/von-restorff-effect/SKILL.md",
       "computedHash": "a36e65d0b678f259e37f835dd3704736578c4760520c57142295c7bdd7dce1a7"
+    },
+    "wayfinder": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/wayfinder/SKILL.md",
+      "computedHash": "fa790eb4255b13d24d7e33ff4891ccd3d621558cc0ab87ae226777538ea16a8f"
     },
     "web-design-engineer": {
       "source": "ConardLi/garden-skills",

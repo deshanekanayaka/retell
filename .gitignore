@@ -40,7 +40,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# third-party design skills, installed with `npx skills add`
+# third-party skills, installed with `npx skills add`
 # Not tracked: large, someone else's work, and skills-lock.json pins the exact
 # versions so any machine can restore them with `npx skills experimental_install`.
 # cleanup, diagnosing-bugs, feature, research, tdd are ours and stay tracked.
@@ -50,3 +50,4 @@ next-env.d.ts
 !.claude/skills/feature
 !.claude/skills/research
 !.claude/skills/tdd
+.agents/
