@@ -148,7 +148,19 @@ export function RecordingUI({
 
       const { path, token } = await createSignedUploadUrl();
       await uploadToSignedUrl(path, token, blob);
-      await createRecordingRow(recordingType, path);
+
+      if (recordingType === "answer") {
+        const response = await fetch("/api/answer", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ path }),
+        });
+        if (!response.ok) {
+          throw new Error("Answer processing failed");
+        }
+      } else {
+        await createRecordingRow(recordingType, path);
+      }
 
       dispatch({ type: "uploadSucceeded" });
     } catch {

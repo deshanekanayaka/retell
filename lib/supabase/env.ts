@@ -1,9 +1,4 @@
-function required(name: string, value: string | undefined): string {
-  if (!value) {
-    throw new Error(`Missing required environment variable: ${name}`);
-  }
-  return value;
-}
+import { required } from "@/lib/env";
 
 export const supabaseUrl = () =>
   required("NEXT_PUBLIC_SUPABASE_URL", process.env.NEXT_PUBLIC_SUPABASE_URL);

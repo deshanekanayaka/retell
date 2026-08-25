@@ -203,12 +203,14 @@ used.
 **Rejected: the story as the scheduled unit.** A story can be strong for one angle and useless
 for another, so a single per story schedule averages over a distinction that matters.
 
-**Interim table, not in this model: `recording`.** S1 (record and upload) needed somewhere to
-put raw audio before transcription, evaluation, or scheduling existed, so it introduced a
-`recording` table (id, anonymous session id, `recording_type`, audio URL, created at) ahead of
-this schema. It is superseded by `attempt` once S2 adds transcription; migrating `recording`
-rows forward, or leaving `recording` as the raw-audio record `attempt` points at, is an S2
-decision, not S1's.
+**`recording`, narrowed rather than replaced.** S1 (record and upload) needed somewhere to put
+raw audio before `attempt` had any reason to exist, so it introduced a `recording` table (id,
+anonymous session id, `recording_type`, audio URL, created at) ahead of this schema. S2 settled
+the question left open there: `recording` is not superseded, it narrows. `attempt` now holds
+every `answer`-type recording going forward; `recording` keeps its shape and stays the home for
+`mic_check`, `validation_a`, and `validation_b`, none of which are ever transcribed. No
+`answer`-type `recording` rows were migrated into `attempt` — nothing was deployed to real users
+yet, so there was no answer data worth preserving.
 
 ### 3.5 Cost control
 
