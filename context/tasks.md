@@ -7,8 +7,6 @@ Steps are defined in docs/03-delivery-plan.md. There are no dates.
 
 ## Now
 
-- [ ] S2: Deepgram transcription with word timings and filler words (FR-16)
-- [ ] S2: compute duration, pace, longest pause, filler count (FR-17)
 - [ ] S3: lib/evaluate.ts, schema enforced, three scores (FR-19, FR-20, FR-21)
 - [ ] S3: feedback screen, transcript, gap, angle labels (FR-22, FR-23, FR-24). No facts block,
   per ADR-016

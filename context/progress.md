@@ -32,3 +32,12 @@ outcome. Written at step 10 of the feature workflow.
   added `context/screens.md`, an inventory of all 17 screens with status. That inventory
   surfaced two open gaps: FR-22's duration and pace block is missing from the feedback screen,
   and the privacy page does not exist while the landing footer needs it.
+- 2026-08-25: S2 complete — transcribe and signals merged to main. New `attempt` table holds
+  facts for `answer`-type recordings; `recording` narrows to `mic_check`/`validation_a`/
+  `validation_b`, which are never transcribed, with no migration since no real user data existed
+  yet. Deepgram transcription isolated in `lib/deepgram.ts` (mirrors `lib/evaluate.ts`'s
+  provider isolation), word-level signal computation (duration, pace, longest pause, filler
+  count) in `lib/signals.ts`, TDD'd against the fixed filler list docs/04 specifies. Verified
+  live against the dev Supabase project: a real recording with six deliberate fillers came back
+  with all six intact in the transcript and correct signal values. docs/02 and docs/06 updated
+  to close out the `recording`/`attempt` interim-table question left open since S1.
