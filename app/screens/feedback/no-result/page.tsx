@@ -7,9 +7,18 @@ import { TranscriptRail } from "@/components/ui/TranscriptRail";
 // own note, leaving the rail undrawn is the whole treatment (docs/07 6.4).
 const QUESTION = "Tell me about a time you worked in a team.";
 
+// Greeked deliberately, not written as a plausible answer. See the note in
+// ../page.tsx: ADR-009 bans drafting story content, and a fabricated
+// first-person account under "What you said" is precisely that.
 const RAILS = [
-  { label: "the setting", widths: ["100%", "96%", "62%"] },
-  { label: "what you did", widths: ["100%", "98%", "92%", "88%", "50%"] },
+  {
+    label: "the setting",
+    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+  },
+  {
+    label: "what you did",
+    text: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat, duis aute irure.",
+  },
 ];
 
 export default function FeedbackNoResultScreen() {
@@ -26,7 +35,7 @@ export default function FeedbackNoResultScreen() {
         </span>
         <div className="flex flex-col gap-3">
           {RAILS.map((rail) => (
-            <TranscriptRail key={rail.label} label={rail.label} widths={rail.widths} />
+            <TranscriptRail key={rail.label} label={rail.label} text={rail.text} />
           ))}
         </div>
       </div>

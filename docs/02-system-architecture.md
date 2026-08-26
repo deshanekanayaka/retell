@@ -88,7 +88,7 @@ sequenceDiagram
     S->>D: transcribe audio
     D-->>S: transcript + word timestamps
     S->>S: compute duration, pace,<br/>longest pause, filler count (FR-17)
-    S->>C: transcript + speech signals
+    S->>C: numbered transcript only<br/>(never the speech signals)
     C-->>S: relevance, structure, specificity (FR-19)
     S->>DB: write evaluation row (FR-20)
     Note over S,DB: Phase 2 only
@@ -103,9 +103,14 @@ Four decisions inside that diagram:
 server route. Serverless request body limits make proxying a media file through an API route
 fragile.
 
-**Speech signals are computed, never inferred.** Duration, words per minute and longest pause
-come from the audio and Deepgram's word timestamps. A language model is never asked how long
-someone spoke (FR-17).
+**Speech signals are computed, never inferred, and never sent to the model.** Duration, words per
+minute and longest pause come from the audio and Deepgram's word timestamps. A language model is
+never asked how long someone spoke (FR-17), and since S3 it is not told either. All three rubric
+dimensions were chosen because they are observable in the transcript alone
+(04-voice-and-evaluation.md section 3.1). Handing the model a duration invites it to fold
+speaking time into `specificity`, turning a text-observable score into a partly time-based one,
+and no prompt wording reliably stops a model using a number placed in front of it. The signals are
+still computed and stored under FR-17; they just do not reach the prompt.
 
 **The model returns three numbers, not a grade.** The mapping from scores to `again`, `hard`,
 `good`, `easy` lives in application code so it is deterministic, tunable without touching a
@@ -186,9 +191,10 @@ session  -> attempt ------/ -> evaluation
   scheduled unit (FR-26).
 - **session**: one sitting.
 - **attempt**: facts about one spoken answer. Audio URL, transcript, word timings, duration,
-  pace, longest pause, filler count, and an `assisted` flag (FR-31).
+  pace, longest pause, filler count, the question text, and an `assisted` flag (FR-31).
 - **evaluation**: one model's judgement of one attempt, stamped with model and rubric version
-  (FR-20).
+  (FR-20). Also carries where the situation, action and result sit, as word positions into the
+  attempt's word timings (ADR-017).
 - **review**: scheduling state for one item. Due date, interval, ease, reps, lapses.
 
 **The load bearing decision is that `item` points at an angle, not at a question.** Many
@@ -202,6 +208,14 @@ used.
 
 **Rejected: the story as the scheduled unit.** A story can be strong for one angle and useless
 for another, so a single per story schedule averages over a distinction that matters.
+
+**`question_text` on `attempt`, ahead of the `question` table.** S3 needed the question in two
+places: `relevance` scores whether the answer addressed it, and section 4 of
+04-voice-and-evaluation.md requires it on the feedback screen for a user returning later. Phase 1
+asks one question, held as a constant in `lib/questions.ts`, and the wording is copied onto each
+attempt rather than referenced. Copying freezes it: reword the question later and yesterday's
+feedback screen must still show what that person was actually asked. `question_id` is deferred to
+the spec that adds the `question` table, the same way S2 deferred its other foreign keys.
 
 **`recording`, narrowed rather than replaced.** S1 (record and upload) needed somewhere to put
 raw audio before `attempt` had any reason to exist, so it introduced a `recording` table (id,

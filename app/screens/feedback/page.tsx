@@ -7,10 +7,25 @@ import { TranscriptRail } from "@/components/ui/TranscriptRail";
 // ink/muted/rule and the chips (docs/07 section 3.3).
 const QUESTION = "Tell me about a time you worked in a team.";
 
+// Greeked deliberately, not written as a plausible answer. ADR-009 bans
+// drafting story content for a user, and an invented first-person account
+// sitting under "What you said" is the exact shape of thing that gets copied
+// into the product and then repeated in a real interview. This screen exists
+// to show measure, rhythm and line length, all of which greeked text carries
+// and a fabricated story does not improve.
 const RAILS = [
-  { label: "the setting", widths: ["100%", "96%", "62%"] },
-  { label: "what you did", widths: ["100%", "98%", "92%", "88%", "50%"] },
-  { label: "how it ended", widths: ["94%", "58%"] },
+  {
+    label: "the setting",
+    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+  },
+  {
+    label: "what you did",
+    text: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat, duis aute irure.",
+  },
+  {
+    label: "how it ended",
+    text: "Excepteur sint occaecat cupidatat non proident, sunt in culpa.",
+  },
 ];
 
 export default function FeedbackScreen() {
@@ -27,7 +42,7 @@ export default function FeedbackScreen() {
         </span>
         <div className="flex flex-col gap-3">
           {RAILS.map((rail) => (
-            <TranscriptRail key={rail.label} label={rail.label} widths={rail.widths} />
+            <TranscriptRail key={rail.label} label={rail.label} text={rail.text} />
           ))}
         </div>
       </div>

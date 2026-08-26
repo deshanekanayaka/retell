@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useReducer, useState } from "react";
 import { Waveform } from "@/components/Waveform";
 import { Button } from "@/components/ui/Button";
@@ -123,6 +124,7 @@ export function RecordingUI({
   const [state, dispatch] = useReducer(recordingReducer, initialRecordingState);
   const blobRef = useRef<Blob | null>(null);
   const [uploadFailed, setUploadFailed] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     onStatusChange?.(state.status);
@@ -158,10 +160,21 @@ export function RecordingUI({
         if (!response.ok) {
           throw new Error("Answer processing failed");
         }
-      } else {
-        await createRecordingRow(recordingType, path);
+
+        const { attemptId } = await response.json();
+        if (typeof attemptId !== "string") {
+          throw new Error("Answer processing returned no attempt");
+        }
+
+        // Deliberately stays in `uploading` rather than dispatching success
+        // first. The sweep keeps running until the feedback screen paints, so
+        // there is no flash of "Done. Thank you." between an answer and the
+        // feedback it was recorded for.
+        router.push(`/feedback/${attemptId}`);
+        return;
       }
 
+      await createRecordingRow(recordingType, path);
       dispatch({ type: "uploadSucceeded" });
     } catch {
       setUploadFailed(true);

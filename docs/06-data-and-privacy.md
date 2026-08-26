@@ -35,7 +35,7 @@ erDiagram
     item ||--o{ attempt : "attempted in"
     question ||--o{ attempt : asked
     session ||--o{ attempt : contains
-    attempt ||--o| evaluation : "judged by"
+    attempt ||--o{ evaluation : "judged by"
 ```
 
 **`recording`, not shown above, narrowed rather than replaced.** S1 (record and upload) shipped
@@ -112,28 +112,44 @@ Facts only. Nothing here is an opinion.
 | `id`, `user_id`, `session_id` | |
 | `item_id` | Null for onboarding answers, which create a story but no item |
 | `question_id` | |
+| `question_text` | The wording actually shown, copied not referenced, so a later rewording cannot rewrite what someone was asked |
 | `audio_url` | |
 | `duration_ms` | |
 | `transcript` | |
-| `word_timings` | jsonb, from Deepgram |
-| `filler_count`, `words_per_minute`, `longest_pause_ms` | Computed, never inferred (FR-17) |
+| `word_timings` | jsonb, from Deepgram. Each word carries both the raw and the punctuated form; sentence splitting reads the punctuated one, `filler_count` reads the raw one |
+| `filler_count`, `words_per_minute`, `longest_pause_ms` | Computed, never inferred (FR-17). Never sent to the model (02 section 3.2) |
 | `assisted` | Story text was visible. Never changes a schedule (FR-31) |
 | `created_at` | |
 
+Populated as of S3: `id`, `audio_url`, `question_text`, `transcript`, `word_timings`,
+`duration_ms`, `filler_count`, `words_per_minute`, `longest_pause_ms`, `created_at`, plus
+`anonymous_session_id` for row level security. `user_id`, `session_id`, `item_id`, `question_id`
+and `assisted` wait for the specs that add those tables.
+
 ### evaluation
 
-One model's judgement of one attempt.
+One model's judgement of one attempt. **An attempt can have several**, because re-scoring on a new
+model or rubric version writes a new row rather than overwriting. That is what makes the
+comparison in 04-voice-and-evaluation.md section 6 possible; overwriting would destroy the
+baseline being compared against. Readers take the most recent by `created_at`.
 
 | Column | Notes |
 | --- | --- |
 | `id`, `attempt_id` | |
 | `model` | The model identifier used |
 | `rubric_version` | Incremented whenever the prompt or anchors change (FR-20) |
-| `relevance`, `structure`, `specificity` | 0 to 3 |
-| `grade` | `again`, `hard`, `good`, `easy`. Derived in code (FR-27) |
-| `gap` | One sentence, phrased as a question |
-| `angles` | Angles this answer could serve |
+| `relevance`, `structure`, `specificity` | 0 to 3. Stored from day one, never shown in Phase 1 (FR-23) |
+| `grade` | `again`, `hard`, `good`, `easy`. Derived in code (FR-27). Nullable and unpopulated until Phase 2 |
+| `gap` | Exactly one question about one missing thing |
+| `angles` | Constrained to the nine slugs in 05 section 1.1, enforced in the schema and in the database |
+| `situation_start_word`, `situation_end_word` | Where the setting sits, as positions in the attempt's `word_timings`. Both null where absent (ADR-017) |
+| `action_start_word`, `action_end_word` | Same, for what they did |
+| `result_start_word`, `result_end_word` | Same, for how it ended |
 | `created_at` | |
+
+The six span columns hold **positions, never text**. A model that returned the passage as a string
+would tidy it, and the tidied version would appear beside the user's real transcript as though
+they had said it (ADR-017, ADR-009).
 
 ### review
 
