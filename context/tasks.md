@@ -7,13 +7,9 @@ Steps are defined in docs/03-delivery-plan.md. There are no dates.
 
 ## Now
 
-- [ ] S3: lib/evaluate.ts, schema enforced, three scores (FR-19, FR-20, FR-21)
-- [ ] S3: feedback screen, transcript, gap, angle labels (FR-22, FR-23, FR-24). No facts block,
-  per ADR-016
+- [ ] S4: accounts, anonymous session claim, save an answer as a story
 
 ## Later, parked
-
-- [ ] S4: accounts, anonymous session claim, save an answer as a story (unparks after S3)
 - [ ] S5: the seven onboarding screens (unparks after the validation results are read)
 - [ ] S6: five question session, rate limits, kill switch, deletion (unparks after S5)
 - [ ] S7: cohort test, recruit 40 to 60 students, measure (unparks after S6)
