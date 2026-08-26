@@ -101,10 +101,48 @@ Deepgram, pre-recorded endpoint. Required options:
 
 - Word level timestamps, used to compute pauses and pace.
 - Filler words enabled, so hesitation survives into the transcript.
+- Punctuation enabled, so the transcript has sentence boundaries. The evaluation prompt numbers
+  those sentences and the model locates the situation, action and result by number (ADR-017).
+  Punctuation only, never `smart_format`, which reformats far more aggressively than sentence
+  boundaries need.
 
 Whisper in any form is rejected for this product. It is trained to produce clean readable text
 and silently removes "um", "uh" and false starts. That is not a setting, the information never
 arrives.
+
+### 2.1 Model tier
+
+**`nova-2`, pinned deliberately.** The tier was unspecified until S3, which meant Deepgram's
+default legacy base tier was being used without anyone choosing it.
+
+Measured on one identical 56 second recording, same flags, tier as the only variable:
+
+| Tier | `filler_count` | Transcription errors, 130 words |
+| --- | --- | --- |
+| base (default) | 7 | 9, including "a shared doc" as "a shared door" |
+| **nova-2** | **7** | **1 to 2** |
+| nova-3 | 5 | 2 to 3 |
+
+**nova-3 is disqualified and this must not be quietly undone.** It drops "um" and "uh" and
+repairs false starts even with filler words enabled. That is exactly the behaviour this section
+rejects Whisper for, and `filler_count` is a contract. A future upgrade to the newer tier would
+break it silently, so the warning also lives in a comment in `lib/deepgram.ts`, where someone
+would make the change.
+
+**Accuracy here is a requirement, not a preference.** The transcript is shown back to the user as
+their own words (section 4.1). A large share of final year students and new graduates are not
+native English speakers, and the base tier degraded badly on exactly that speech. Showing an
+anxious second-language speaker a mangled version of their own answer, in a product about
+interview confidence, hands them evidence against themselves.
+
+**Known limitation.** Accuracy degrades on numbers and quantities: "four of us" was transcribed as
+"Fofas", "forty" as "photo". Those are the words that make an answer specific, so this is worth
+measuring in the cohort test. It did not cost a `specificity` score in calibration, but it does
+reach the screen as the user's own words.
+
+**Provisional.** One speaker, scripted reads. Not settled until cohort audio tests it. Open:
+nova-2's cost per minute, and its deprecation horizon, since this pins the older Nova tier
+deliberately.
 
 **Signals are computed from the audio and the timestamps, never inferred by a language model**
 (FR-17):
@@ -180,12 +218,27 @@ Schema enforced. The model returns only:
   structure: 0 | 1 | 2 | 3,
   specificity: 0 | 1 | 2 | 3,
   gap: string,          // one thing missing, phrased as a question
-  angles: string[]      // which question angles this answer could serve
+  angles: AngleSlug[],  // one of the nine slugs in 05 section 1.1, never free text
+
+  // Where each part sits, as sentence numbers into the numbered transcript the
+  // prompt supplied. Positions, never text (ADR-017). null where absent.
+  situation: { start, end } | null,
+  action:    { start, end } | null,
+  result:    { start, end } | null
 }
 ```
 
 The model never returns a grade, a total, or free prose beyond `gap`. Grade derivation is in
 05-spaced-repetition.md and happens in application code (FR-27).
+
+**The three ranges are positions, not quotes, and this is load bearing** (ADR-017). A free text
+field invites the model to tidy a false start into a readable sentence, which would then appear
+beside the user's real transcript as though they had said it. Ranges cannot carry a word the
+speaker did not say. Application code resolves them to word positions, drops any that are out of
+bounds, inverted or overlapping, and stores only what survives.
+
+**`angles` is an enum, not a free array.** Every angle slug is pointed at by an item, so an
+invented one is a label nothing downstream can use.
 
 ### 3.4 Prompt rules
 
@@ -195,8 +248,14 @@ The prompt is a contract as much as the schema is. Fixed rules:
 - The model never rewrites the answer, never supplies an example answer, and never invents
   detail the speaker did not say. Suggesting content the user did not experience would produce
   claims they repeat in a real interview.
-- `gap` is one sentence, phrased as a question, about something absent from the answer. Never
-  a judgement, never the word "wrong" (FR-24).
+- `gap` is **exactly one question about exactly one missing thing**, never a judgement, never the
+  word "wrong" (FR-24). Not two questions joined by "and", and not a second ask appended to the
+  first. "One sentence" was the original wording and proved too loose: the model returned "Which
+  section did you take on yourself, and what did you do about the teammate who stopped replying?",
+  which is one sentence and two demands. FR-24 says one specific thing, and section 4.2 has the
+  speaker answer the gap out loud as their next attempt, so a double question gets half answered
+  on the screen designed to stop them feeling they fell short. If two things are missing, the
+  prompt asks for the more important one and says nothing about the other.
 - Tone is warm, in line with 07-design-system.md section 6, which owns voice and tone for the
   whole product. Warm means the words around the finding: plain, level with the reader, and
   never cold about work someone was nervous to produce.
@@ -274,6 +333,21 @@ when talking, and would put four rails on an answer of roughly 140 words.
 the three parts frequently arrive interleaved rather than in blocks. Marking every occurrence
 shreds a sixty second answer into six or seven fragments and destroys the calm the treatment
 exists for. Each part gets one rail, placed on the longest run of speech carrying it.
+
+**Rails are sentence granular** (ADR-017). A rail starts and ends on a sentence boundary, because
+the model locates parts by numbered sentence rather than by quoting text. Two consequences worth
+knowing before reading cohort transcripts:
+
+- **A sentence carrying two parts can only be claimed by one.** Answers that open by stating their
+  outcome ("it went fine in the end, but at the start it was a mess") put a result and a setting in
+  the same breath. Observed on real answers. Accepted as the price of one rail per part.
+- **Sentences belonging to no part are normal**, and render with no rule and no label, exactly as
+  an absent part does. Most answers have some.
+
+**Rails are suppressed entirely when the transcript has no sentence boundaries at all.** A single
+rail labelled "the setting" running down a whole answer would say "you never said what you did or
+how it ended", which would be a transcription defect stated as a claim about the user. The screen
+degrades to the plain transcript instead.
 
 **A part the answer does not contain gets no rail and no label.** No empty row, no greyed
 placeholder, no missing marker. The absence in the margin is the whole signal, and the gap

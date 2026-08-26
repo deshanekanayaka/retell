@@ -1,5 +1,10 @@
 export type WordTiming = {
   word: string;
+  // The same word carrying Deepgram's punctuation and capitalisation. Added
+  // alongside `word` rather than replacing it: `filler_count` is a contract
+  // (docs/04 section 2) and reads `word`, so it must not move when sentence
+  // splitting starts reading `punctuatedWord`.
+  punctuatedWord: string;
   start: number;
   end: number;
 };

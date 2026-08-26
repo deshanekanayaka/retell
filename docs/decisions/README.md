@@ -30,3 +30,5 @@ Drafting: AI may draft, Deshan approves and flips Status from Proposed to Accept
 | 013 | Accept Chrome's native `<usermedia>` label over the fixed button copy | Superseded by ADR-014 |
 | 014 | Plain `getUserMedia()`, not `<usermedia>` | Accepted |
 | 015 | Warm tone everywhere, including the evaluation | Accepted |
+| 016 | The feedback screen shows no duration or pace | Accepted |
+| 017 | Transcript rails are located, never quoted | Accepted |
