@@ -49,9 +49,10 @@ FR-34), evaluation quality, and keeping data in a shape that survives changing m
 | Auth | Supabase Auth | Same service as the database, session cookie on the server |
 | Object storage | Supabase Storage | Audio lives beside the data that describes it |
 | Capture | Browser MediaRecorder | Native, no library |
-| Permission | Chrome `usermedia` element, with `getUserMedia` fallback | Best available permission and recovery UX (FR-2) |
+| Permission | Plain `getUserMedia` (ADR-014) | Chrome's declarative `usermedia` element only supports combined audio and video, no audio-only mode |
 | Transcription | Deepgram, pre-recorded, filler words and word timestamps on | Filler words are a flag, not a derivation (FR-16) |
 | Evaluation | Claude, schema enforced response | The rubric returns validated JSON, never parsed prose (FR-19) |
+| Abuse defence | Cloudflare Turnstile, before the first anonymous answer | Invisible, no cookies, closes the automated share of FR-36 without touching FR-1 |
 | Package manager | pnpm | Fine |
 | Tests | Vitest, Playwright later | Deferred until there is behaviour worth pinning |
 
@@ -116,9 +117,15 @@ still computed and stored under FR-17; they just do not reach the prompt.
 `good`, `easy` lives in application code so it is deterministic, tunable without touching a
 prompt, and replayable over historical attempts (FR-27).
 
-**Evaluation is isolated behind one module**, `lib/evaluate.ts`, which takes a transcript plus
-signals and returns the scored result. No other file knows which provider is behind it.
+**Evaluation is isolated behind one module**, `lib/evaluate.ts`, which takes a question and a
+transcript and returns the scored result. No other file knows which provider is behind it.
 Changing model or vendor is a single file change.
+
+**The same signed upload path is idempotent.** A second `POST /answer` for a path that already
+has an attempt resumes that attempt rather than re-transcribing and re-evaluating, closing off
+both a retry-storm cost and a deliberate replay. This is a lookup before work begins
+(`findAttemptByPath`), not a separate status column; the existing nullable `attempt` and
+`evaluation` columns already say what has and has not happened.
 
 ### 3.3 Data flow
 
@@ -144,7 +151,6 @@ flowchart TD
     end
 
     T --> SC
-    SIG --> SC
     SIG --> G
 
     G --> AS{Attempt<br/>assisted?}
@@ -152,7 +158,6 @@ flowchart TD
     AS -- no --> R[(review row<br/>next due date<br/>FR-28)]
 
     T --> FB[Feedback shown to user<br/>transcript, one gap,<br/>labels<br/>FR-22]
-    SIG --> FB
     SC -. never shown in Phase 1<br/>FR-23 .-> FB
 
     T --> STO[(story<br/>user's own words<br/>FR-9)]
@@ -173,7 +178,7 @@ scored, still shown feedback. It simply does not move the due date (FR-31).
 
 ### 3.4 Data model
 
-Eight tables. Full column list is owned by 04-data-and-privacy.md; the shape and the reasoning
+Eight tables. Full column list is owned by 06-data-and-privacy.md; the shape and the reasoning
 are here.
 
 ```
@@ -191,7 +196,8 @@ session  -> attempt ------/ -> evaluation
   scheduled unit (FR-26).
 - **session**: one sitting.
 - **attempt**: facts about one spoken answer. Audio URL, transcript, word timings, duration,
-  pace, longest pause, filler count, the question text, and an `assisted` flag (FR-31).
+  pace, longest pause, filler count, a transcription confidence summary (FR-17, FR-42), the
+  question text, and an `assisted` flag (FR-31).
 - **evaluation**: one model's judgement of one attempt, stamped with model and rubric version
   (FR-20). Also carries where the situation, action and result sit, as word positions into the
   attempt's word timings (ADR-017).
@@ -228,26 +234,40 @@ yet, so there was no answer data worth preserving.
 
 ### 3.5 Cost control
 
-Three independent limits, all in application code (FR-36, FR-37):
+Independent limits, all in application code (FR-36, FR-37):
 
 1. Hard spend cap configured in each provider console.
-2. One session per user per day; one answer per IP per day for anonymous users.
-3. A global daily spend threshold that stops new sessions being accepted.
+2. One session per user per day, hard stop.
+3. Anonymous answers metered by session, with IP address used only as a coarse ceiling, not the
+   primary limit, since student networks and mobile carriers share IPs behind NAT. Turnstile is
+   required before the first anonymous answer.
+4. A global daily spend threshold, plus a per-hour spend ceiling, so the worst case an
+   attacker can reach is one hour of budget rather than a full day.
 
 Anonymous answers exist because feedback is shown before signup (FR-7), which means the
-pipeline can be triggered by anyone who finds the URL. Limit 2 is what makes that safe.
+pipeline can be triggered by anyone who finds the URL. Limits 2 through 4 are what make that
+safe; no single one is sufficient alone, since accurately metering an anonymous visitor without
+hurting FR-1 is not fully solvable.
 
 ### 3.6 Scheduling (Phase 2)
 
-A fixed interval ladder: `again` returns the item later in the same session, `hard` sets one
-day, `good` steps 1, 2, 4, 7, 14, `easy` skips a step. Maximum interval 14 days (FR-28).
+A fixed interval ladder: `again` resets the item to the first step (a lapse is treated as
+evidence the interval was wrong, not as a single bad day to be forgiven), `hard` sets one day,
+`good` steps 1, 2, 4, 7, 14, `easy` skips a step. Maximum interval 14 days (FR-28).
+
+**An overdue item is simply due.** There is no separate "how late" state and no backlog count
+ever shown to the user; a student returning after nine days sees the same screen as one
+returning on time. Due items are ordered weakest-first: `last_grade` severity (`hard`, then
+`good`, then `easy`), then `interval_days` ascending as a tiebreak. Both fields already exist on
+`review`, so this needs no separate strength estimate.
 
 The cap is the important part. General spaced repetition pushes intervals to months because it
 optimises for recall years later. A Retell user is job hunting for about eight weeks, so an
 item scheduled 45 days out never returns. The cap matches the real horizon.
 
 **Rejected: FSRS.** It is better than a fixed ladder when there are thousands of reviews per
-user to learn from. Retell will have tens.
+user to learn from. Retell will have tens. The same reasoning rules out a decaying-strength
+estimate for due-item ordering above; weakest-first is done with existing columns, not a model.
 
 ## 4. Revisit triggers
 
@@ -265,22 +285,30 @@ choice is not up for debate.
 | Supabase | Storage or auth becomes a bottleneck, or costs exceed the sum of separate services |
 | Single application, no monorepo | A second deployable exists |
 | No numeric score shown to users (FR-23) | The rubric is validated against real answers and the score is defensible |
+| Rubric agreement bar (01-PRD.md section 6) | The first gold-set run produces a real number to set it against |
+| Session-based anonymous rate limiting, Turnstile | Either is defeated at a scale worth engineering around |
 
 ## 5. What is deliberately not built
 
 - No queue or background worker. Transcription of a 60 second clip is fast enough to complete
-  inside a request. A queue is added when p95 latency exceeds the feedback target, not before.
+  inside a request. A queue is added when latency measurably exceeds the feedback target, not
+  before; no numeric target is set yet, since nothing has been measured against real traffic.
 - No caching layer.
 - No admin dashboard. Corpus inspection is done with SQL.
-- No analytics beyond the metrics named in 01-PRD.md section 6.
+- No analytics beyond the metrics named in 01-PRD.md section 6, and no analytics or marketing
+  cookies at all (01-PRD.md section 5).
+- No device fingerprinting (01-PRD.md section 5).
 - No iPhone, payment, or sharing infrastructure (Phase 3).
 
 ## 6. Open questions
 
 - Anonymous unclaimed audio is deleted after 24 hours (FR-8). Confirmed against
   06-data-and-privacy.md section 4.
-- The mic check recording (FR-3) is stored, flagged `mic_check`, never transcribed or evaluated.
+- The mic check recording (FR-3) is stored, flagged `mic_check`, and transcribed internally
+  against its known sentence solely to measure transcription reliability. Never shown, scored,
+  counted, or played back.
 - Grade thresholds (FR-27) are set in 05-spaced-repetition.md section 2. They are a starting
   position, revisited against real cohort answers.
 - Open action, not a decision: confirm Deepgram and the model provider default to no retention
-  and no training on submitted audio. Required before S7.
+  and no training on submitted audio. Required before deploying to friends, not before a cohort
+  test that may never happen (03-delivery-plan.md).

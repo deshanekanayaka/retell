@@ -85,7 +85,7 @@ export default async function FeedbackPage({
         <div className="flex flex-col gap-2 border-t border-rule pt-6">
           <p className="font-sans text-[15px] leading-[1.4] text-muted">
             {isTooShortToScore(attempt.durationMs ?? 0)
-              ? "Let's give this one another go."
+              ? "Let's try an easier way in."
               : "We couldn't finish reading this one back. Your answer is saved."}
           </p>
         </div>

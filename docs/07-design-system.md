@@ -146,10 +146,10 @@ Exactly three places in the product:
 ### 3.5 Themes
 
 **Phase 1 ships light only.** Every colour is a token so a dark theme is a swap later, but a
-second theme is not designed, tested or QA'd for a validation build running on desktop Chrome
-with 40 to 60 recruited students. Doing it properly costs about a day plus drag on every screen
-after; doing it badly produces the unreadable dark mode bug on the screen where the user is
-already anxious.
+second theme is not designed, tested or QA'd for a build whose Phase 1 gate is engineering, not
+a validated flow in front of real users (03-delivery-plan.md). Doing it properly costs about a
+day plus drag on every screen after; doing it badly produces the unreadable dark mode bug on the
+screen where the user is already anxious.
 
 ## 4. Shape, spacing, stroke, icons
 

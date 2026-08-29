@@ -118,6 +118,7 @@ Facts only. Nothing here is an opinion.
 | `transcript` | |
 | `word_timings` | jsonb, from Deepgram. Each word carries both the raw and the punctuated form; sentence splitting reads the punctuated one, `filler_count` reads the raw one |
 | `filler_count`, `words_per_minute`, `longest_pause_ms` | Computed, never inferred (FR-17). Never sent to the model (02 section 3.2) |
+| `confidence` | A single summary of Deepgram's per-word confidence for this answer (FR-17). Collected from Phase 1, gated later once the real distribution is known (FR-42) |
 | `assisted` | Story text was visible. Never changes a schedule (FR-31) |
 | `created_at` | |
 
@@ -181,7 +182,7 @@ future, more than one.
 | --- | --- | --- |
 | Raw audio, signed up user | Indefinitely, until the user deletes it (FR-15) | On user request, or with the account |
 | Raw audio, anonymous session | 24 hours (FR-8) | Automatically if unclaimed |
-| Mic check audio | With the user, flagged `mic_check`, never transcribed | With the account |
+| Mic check audio | With the user, flagged `mic_check`, transcribed internally against its known text for reliability calibration only (FR-3) | With the account |
 | Transcripts and evaluations | With the attempt | With the attempt |
 | Account | Until deleted | Immediately on request, with all audio and rows |
 
@@ -197,8 +198,10 @@ Feedback is shown before signup (FR-7), so a recording exists before an account 
 - Audio and its attempt are written against that id.
 - On signup the rows are claimed by the new user.
 - Unclaimed after 24 hours, everything is deleted.
-- One anonymous answer per IP per day (FR-36), which is what stops the URL being a free
-  transcription API for anyone who finds it.
+- Metered by session, not by IP address (FR-36). IP is used only as a coarse ceiling; student
+  networks and mobile carriers share IPs behind NAT, so IP alone both blocks legitimate users and
+  is trivially evaded. Turnstile is required before the first anonymous answer, which is what
+  actually stops the URL being a free transcription and evaluation API for anyone who finds it.
 
 The privacy copy on the permission screen must be true at this point, before an account exists.
 It is.
@@ -221,14 +224,23 @@ It is.
 
 ## 8. Decided
 
-- Mic check audio is stored, flagged `mic_check`, never transcribed or evaluated.
+- Mic check audio is stored, flagged `mic_check`, transcribed internally against its known
+  sentence for reliability calibration only. Never shown, scored, or played back.
 - **Deleting audio deletes its transcript and evaluation too.** Deletion removes everything
   derived from the recording, not just the file. A retained transcript of a deleted recording
   would make the promise in section 1 false.
+- **Account deletion is two steps, in order, not one cascade.** `storage.objects` has no foreign
+  key to any application table, so deleting a user's rows does not touch their files. The
+  storage objects are deleted first (the paths are already known, keyed by user id), then the
+  `auth.users` row is deleted via the admin API, which does cascade every table that references
+  it. A failure partway through this order leaves orphaned files, never orphaned rows pointing
+  at nothing. Deleting the auth row is the first real use of the service role key in the
+  product, and the only path that should ever touch it. Verified by a test that asserts the
+  storage object is gone, not only the row.
 
 ## 9. Open action
 
 Not a decision, a fact to verify: confirm the data processing terms with Deepgram and the model
 provider, and that their defaults are no retention and no training on submitted audio. The
-promises in section 1 are only true if their settings agree. Required before any real user other
-than a recruited tester.
+promises in section 1 are only true if their settings agree. Required before deploying to
+friends (context/tasks.md), not gated on a cohort test that may never happen.

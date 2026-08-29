@@ -20,7 +20,7 @@ be made warmer, it is never made vaguer:
 > **You'll be saying this out loud.**
 > It's allowed to come out messy. That's what practice is for.
 >
-> Your recordings stay on your account. Nobody else hears them.
+> Your recordings stay on your account. No other user ever hears them.
 > The first one is only a mic check. It doesn't count for anything.
 
 Button: **Turn on my microphone**
@@ -37,9 +37,7 @@ button in front of a browser permission dialog is how a grant becomes a dismissa
 
 **Superseded:** the original wording opened "You'll be speaking out loud. That's the point."
 and was marked fixed and not to be softened. "That's the point" answered an objection the user
-had not raised yet, which reads as a rebuke on the one screen that cannot afford one. Changed
-before the cohort test so that permission copy is not a moving variable while the mic check is
-being measured (03-delivery-plan.md section 4).
+had not raised yet, which reads as a rebuke on the one screen that cannot afford one.
 
 Implementation is a plain button calling `navigator.mediaDevices.getUserMedia({ audio: true })`
 (ADR-014 — Chrome's declarative `usermedia` element was tried first but only supports combined
@@ -58,7 +56,11 @@ denial screen rather than staying silent (ADR-014).
 ### 1.2 Recording
 
 - 60 second countdown, stops at zero (FR-18).
-- Restart before submitting is free and always visible.
+- **Restart handling splits on when it happens** (FR-18). A false start, stopped within the
+  first 10 seconds, is free and unlimited: everyone fumbles an opening, and this is the exact
+  moment anxiety strikes, which is when the product must not add friction. A redo after 10
+  seconds means the speaker heard themselves and wants a cleaner take, which is rehearsal, the
+  thing the daily drill exists to train against; it is capped at one per answer.
 - Stopping early keeps the answer.
 - A live waveform shows the microphone is working. This is the only feedback during recording.
   It never flatlines while the microphone is live: a minimum bar height is held even in silence,
@@ -78,13 +80,19 @@ The first spoken act is reading one supplied sentence aloud (FR-3):
 > "Read this out loud so I can check your mic: *I'm here because I have an interview coming
 > up.*"
 
-It is never transcribed, evaluated, counted or played back. Scripted speech has no content to
+It is never evaluated, counted or played back to the user. Scripted speech has no content to
 fail at, and the sentence is first person and true, so the step from it to speaking about
 themselves is one step rather than two.
 
-**Decided:** the mic check audio is stored, flagged `mic_check`, and never transcribed,
-evaluated or counted. It costs almost nothing to keep and it is the only recording of the user
-before they had any practice, which makes a later before-and-after possible.
+**It is transcribed internally, against its known text, solely to measure transcription
+reliability** (FR-3). This never reaches the user, is never scored, and never contributes to any
+answer's evaluation. The mic check is the one place the exact correct text is known in advance,
+so it is the cheapest possible source of a per-user signal for how much to trust this session's
+transcripts, which the low-confidence handling in section 2.2 depends on.
+
+**Decided:** the mic check audio is stored, flagged `mic_check`. It costs almost nothing to keep
+and it is the only recording of the user before they had any practice, which makes a later
+before-and-after possible.
 
 ### 1.4 Playback
 
@@ -136,13 +144,35 @@ anxious second-language speaker a mangled version of their own answer, in a prod
 interview confidence, hands them evidence against themselves.
 
 **Known limitation.** Accuracy degrades on numbers and quantities: "four of us" was transcribed as
-"Fofas", "forty" as "photo". Those are the words that make an answer specific, so this is worth
-measuring in the cohort test. It did not cost a `specificity` score in calibration, but it does
-reach the screen as the user's own words.
+"Fofas", "forty" as "photo". Those are the words that make an answer specific, and this is exactly
+what section 2.2's confidence handling exists to catch: it did not cost a `specificity` score in
+calibration, but it does reach the screen as the user's own words.
 
-**Provisional.** One speaker, scripted reads. Not settled until cohort audio tests it. Open:
-nova-2's cost per minute, and its deprecation horizon, since this pins the older Nova tier
-deliberately.
+**Provisional.** One speaker, scripted reads. Not settled until measured against real, varied
+audio, which under path B (03-delivery-plan.md section 1) means Deshan's own use of the product
+and whoever he shares it with directly, not a recruited cohort. Open: nova-2's cost per minute,
+and its deprecation horizon, since this pins the older Nova tier deliberately.
+
+### 2.2 Transcription confidence
+
+Deepgram returns a per-word confidence score. It is kept when parsing and a single summary
+figure is stored on `attempt` (FR-17), collected from Phase 1 onward with no threshold applied
+yet, since the real distribution of confidence across real answers is unknown.
+
+**The transcript is a fact with a stated reliability, not an unconditional one.** Retell never
+names a weakness it might have mis-heard (FR-42). When confidence for an answer is low:
+
+- The transcript is still shown. It is not hidden or replaced.
+- The gap question is omitted. Scoring specificity or structure against words that may not be
+  what the speaker actually said risks naming a fault that belongs to the microphone, not the
+  speaker.
+- A plain message says part of the answer did not come through clearly, without blaming the
+  speaker or naming a fault of theirs (07-design-system.md section 6).
+- One re-record is offered for that answer. Both the original and the re-record are kept, since
+  raw audio is never lost.
+
+The threshold that defines "low" is provisional, corrected once the confidence distribution
+across real use is known (01-PRD.md section 8).
 
 **Signals are computed from the audio and the timestamps, never inferred by a language model**
 (FR-17):
@@ -336,7 +366,7 @@ exists for. Each part gets one rail, placed on the longest run of speech carryin
 
 **Rails are sentence granular** (ADR-017). A rail starts and ends on a sentence boundary, because
 the model locates parts by numbered sentence rather than by quoting text. Two consequences worth
-knowing before reading cohort transcripts:
+knowing before reading real transcripts:
 
 - **A sentence carrying two parts can only be claimed by one.** Answers that open by stating their
   outcome ("it went fine in the end, but at the start it was a mess") put a result and a setting in
@@ -423,5 +453,5 @@ on a cheaper tier and compared. The switch, if it happens, is recorded as an ADR
 Evaluation is isolated behind `lib/evaluate.ts`. No other file knows which provider is behind
 it (02-system-architecture.md section 3.2).
 
-Cost is bounded by the three limits in 02-system-architecture.md section 3.5, not by choosing a
+Cost is bounded by the limits in 02-system-architecture.md section 3.5, not by choosing a
 cheap model early.

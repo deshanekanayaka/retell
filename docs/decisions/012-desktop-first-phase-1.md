@@ -39,6 +39,11 @@ that.
 Before recruiting testers for the two-arm validation page or any real user, since that
 recruitment plan assumes phone use. At the latest, before S7.
 
+**Superseded (2026-08-29):** the validation track and S7 are cut (03-delivery-plan.md section 4,
+context/docs-review-decisions.md decision 52). The trigger is now deployment to friends
+(context/docs-review-decisions.md decision 59), which is when real-phone testing resumes
+(03-delivery-plan.md section 7, point 3).
+
 ## References
 
 docs/03-delivery-plan.md section 7 (definition of done), section 4 (validation track). ADR-004.

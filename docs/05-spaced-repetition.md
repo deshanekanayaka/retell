@@ -57,7 +57,7 @@ relevance <= 1                        -> again
 duration_ms < 25000                   -> again
 structure <= 1 or specificity <= 1    -> hard
 all three >= 2                        -> good
-all three == 3 and 45s <= duration <= 90s -> easy
+all three == 3 and 45s <= duration <= 60s -> easy
 ```
 
 Evaluated in that order; the first match wins.
@@ -74,9 +74,13 @@ force.
 the audio, not a judgement, which is why it sits alongside relevance rather than inside the
 rubric.
 
+**The `easy` window's upper bound is 60 seconds, not 90.** FR-18 caps recording at 60 seconds,
+so no answer can ever be longer; the original 90 second figure described a range nothing could
+reach.
+
 **Founder authored, accepted as v1.** The thresholds above are a starting position, not a
-finding. They are checked against the first real cohort's answers and adjusted if wrong, with
-the change recorded as an ADR and the rubric version incremented.
+finding. They are corrected against real use, whether or not a cohort ever exists to produce it,
+with the change recorded as an ADR and the rubric version incremented.
 
 ### 2.1 Assisted attempts
 
@@ -114,6 +118,8 @@ limitation, it is the correct setting for the real horizon.
 
 Rejected: **FSRS.** It is better than a fixed ladder when there are thousands of reviews per
 user to learn from. Retell will have tens. It would be sophistication with nothing to feed it.
+The same shortage of data rules out a decaying-strength estimate for ordering due items, section
+3.2 uses existing columns instead.
 
 Revisit trigger: more than about 50 reviews per active user.
 
@@ -122,28 +128,46 @@ Revisit trigger: more than about 50 reviews per active user.
 One `review` row per item: `due_at`, `interval_days`, `reps`, `lapses`, `last_grade`,
 `last_attempt_at`.
 
-An `again` increments `lapses` and returns the item to the end of the current session's queue.
-It does not reset the ladder to zero; it drops one step. Resetting to zero punishes a single bad
-day disproportionately in a product whose whole premise is showing up daily.
+An `again` increments `lapses`, returns the item to the end of the current session's queue for a
+possible re-attempt, and resets the interval to the first step rather than dropping one step. A
+lapse is treated as evidence the interval was wrong, not as a single bad day to be forgiven: this
+is the same reasoning FR-30's twists rest on, an answer that collapses under pressure was not
+actually known at the interval the schedule assumed, and that is a genuinely useful signal to
+act on rather than soften.
+
+### 3.2 Ordering due items
+
+Due items are ordered weakest first, not oldest-due-first. Sort by `last_grade` severity
+(`hard`, then `good`, then `easy`; an item currently `again` is mid-session, not in this queue),
+then by `interval_days` ascending as a tiebreak, a shorter interval is a shakier item. Both
+fields already exist on `review`, so this needs no separate strength estimate the way FSRS
+would.
+
+**An overdue item is simply due.** There is no separate lateness state and no backlog count is
+ever shown. A student returning after nine days sees the same screen as one returning on time;
+the ordering rule above is what surfaces the right items first, not a visible penalty for being
+late.
 
 ## 4. Session composition
 
-Five answers (FR-29):
+Three answers (FR-29, matching FR-43's Phase 1 session length):
 
 | Slot | Contents |
 | --- | --- |
-| 1 to 3 | Items that are due, oldest due first |
-| 4 | A twist, on an item currently graded `good` or `easy` |
-| 5 | A new pairing, never attempted |
+| 1 | The item that is due, weakest first (section 3.2) |
+| 2 | A twist, on an item currently graded `good` or `easy` |
+| 3 | A new pairing, never attempted |
 
 Shortfalls are backfilled with new pairings. Early on almost every session is new pairings,
 which is correct: the first two weeks are for discovering which stories cover which angles.
 
-**Slot 4 attacks strength, not weakness.** Twisting an item the user is already failing teaches
+**Slot 2 attacks strength, not weakness.** Twisting an item the user is already failing teaches
 them nothing except that they are failing. Twisting one they think they have mastered is where
-the learning is.
+the learning is. When nothing qualifies, no item is currently graded `good` or `easy`, that is a
+shortfall like any other and is backfilled with a new pairing rather than twisting a weak item or
+reaching into an unrelated angle just to fill the slot.
 
-**Slot 5 is how the item table grows.** Choose a pairing from a story with few items and an
+**Slot 3 is how the item table grows.** Choose a pairing from a story with few items and an
 angle the user has thin coverage of, so the grid fills in rather than clustering.
 
 ## 5. Twist questions
@@ -217,8 +241,8 @@ making returning feel worth it? If it is the first, it does not ship.
   next to.
 - **Never pre-select the harder option.** They pre-selected a tougher goal to speed users through
   and lost significantly. No pre-ticked reminder, no default goal, no pre-selected anything.
-- **The early window is where retention is won.** For us that is day 4. Design and copy effort
-  belongs in sessions one to four.
+- **The early window is where retention is won.** For us that is the first four sessions. Design
+  and copy effort belongs there.
 
 **Banned, and written down before the phase gate makes them tempting:**
 
@@ -245,14 +269,10 @@ mechanic available.
 **Rejected because if the product is good enough, people return without being asked.** Recorded
 here rather than deleted, so it is not re-proposed as a new idea later.
 
-There is a second argument for the rejection that is worth keeping. Phase 1 exists to measure
-whether people come back on day four. With no habit scaffolding of any kind, that number is the
-product's own pull and nothing else, which is a cleaner reading than a number produced with a
-commitment prompt sitting in front of it.
-
-The cost is that it is the one legitimate mechanic we had, and the day 4 number will be the
-lower of the two possible readings. That cost is recorded in 03-delivery-plan.md section 8
-alongside the kill criteria.
+An earlier version of this rejection also argued that no habit scaffolding kept a cleaner day 4
+return number. That justification no longer applies: Phase 1 does not measure day 4 return at
+all (03-delivery-plan.md), so there is no number left for the commitment moment to have muddied.
+The rejection stands on the first reason alone.
 
 ### 7.1 The session end message
 
