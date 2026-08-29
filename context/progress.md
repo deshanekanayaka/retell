@@ -81,3 +81,14 @@ outcome. Written at step 10 of the feature workflow.
   question bank (`lib/questions.ts`) is drafted, approved, and committed, not yet wired into the
   answer route since question selection is S6/S8's job. docs/03's Phase 1 stop is now a
   condition (the engineering gate, section 7.1 met, full stop) rather than an unset date.
+- 2026-08-29: Landing brand and motion — a wordmark (a single-line voice-burst waveform, echoing
+  the recording waveform and a new ambient hero wave), favicon/apple-icon/OG image, five SVG
+  section illustrations built from product objects (the record control, transcript rails, story
+  chips), and entrance/ambient motion under a new founder-approved docs/07 section 5.5 scoped to
+  marketing pages only. A second pass tightened section padding, added the illustrations, and
+  moved the three-step list and FAQ to multi-column grids after Deshan flagged the first cut as
+  too spaced out and too text-heavy. Considered and rejected without an ADR: a Duolingo-style
+  mascot (banned outright) and a cinematic scroll-film treatment (conflicts with docs/07 5.2/5.3
+  as written). Design skill packs installed to `~/.claude/skills` this session for advisory use.
+  Record, feedback and privacy screens still carry the old plain treatment; that follow-up pass
+  is unscoped.

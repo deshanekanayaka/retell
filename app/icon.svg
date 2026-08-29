@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Brand mark favicon: the voice-burst waveform in accent on the paper
+       ground, so the tab reads as Retell against light and dark chrome.
+       Stroke is heavier than the in-page mark so it survives 16px. -->
+  <rect width="64" height="64" rx="8" fill="#EFF0EA"/>
+  <g transform="translate(10 16) scale(1)">
+    <path d="M2 16 C5.63636 16 6.36364 12 10 12 C13.6364 12 14.3636 25 18 25 C21.6364 25 22.3636 4 26 4 C29.6364 4 30.3636 21 34 21 C37.6364 21 38.3636 16 42 16"
+      fill="none" stroke="#2F5D45" stroke-width="5" stroke-linecap="round"/>
+  </g>
+</svg>
