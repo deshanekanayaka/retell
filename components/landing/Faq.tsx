@@ -48,9 +48,9 @@ const QUESTIONS = [
 
 export function Faq() {
   return (
-    <dl className="flex flex-col">
+    <dl className="grid md:grid-cols-2 md:gap-x-12">
       {QUESTIONS.map(({ question, answer }) => (
-        <div key={question} className="flex flex-col gap-2 border-t border-rule py-6 first:border-t-0 first:pt-0">
+        <div key={question} className="flex flex-col gap-2 border-t border-rule py-5">
           <dt className="font-serif text-xl leading-snug text-ink">{question}</dt>
           <dd className="max-w-[62ch] font-sans text-base leading-[1.55] text-pretty text-ink-soft">
             {answer}

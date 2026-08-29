@@ -244,6 +244,24 @@ line. The waveform stays, because it is functional feedback rather than decorati
 the scroll and becomes a single level bar rising and falling in place. Proof the microphone is
 live is the accessibility floor here, not the animation.
 
+### 5.5 The marketing surface
+
+Sections 5.1 to 5.4 govern the app. Marketing pages (`/`, `/privacy`) may additionally use:
+
+- Entrance motion: opacity plus a vertical rise of at most 16px, ease-out only, 200 to 400ms,
+  fired once per element as it enters the viewport. Stagger across siblings at most 90ms.
+- Hover states: 150ms colour or underline changes on links and cards.
+- One ambient element per page at most: on the landing hero, a single slow-drifting waveform
+  line in `muted`, decorative, amplitude-free, drawn once and moving gently. It must be
+  ignorable; if it draws the eye from the headline it is wrong.
+
+Still banned on marketing pages, same as everywhere: spring and bounce easing, scale on press
+or hover, parallax, pinned or scroll-scrubbed scenes, pulses, counters, skeleton shimmer,
+gradients, shadows, celebration.
+
+`prefers-reduced-motion` removes entrance rises (elements render in place, at most a plain
+opacity fade) and freezes the ambient element into a static line.
+
 ## 6. Voice and tone
 
 This section owns every user-facing word in the product. Where another document quotes fixed
