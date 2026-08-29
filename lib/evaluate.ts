@@ -3,6 +3,7 @@ import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import { z } from "zod";
 import { required } from "@/lib/env";
 import { ANGLE_SLUGS, type AngleSlug } from "./angles";
+import { isValidGap } from "./gap";
 import { resolveRails, type ResolvedRails } from "./rails";
 import { splitIntoSentences, type Sentence } from "./sentences";
 import type { WordTiming } from "./signals";
@@ -126,7 +127,7 @@ Their answer, as numbered sentences:
 ${numbered}`;
 }
 
-async function requestEvaluation(userMessage: string) {
+async function requestEvaluation(userMessage: string, transcriptText: string) {
   const client = new Anthropic({
     apiKey: required("ANTHROPIC_API_KEY", process.env.ANTHROPIC_API_KEY),
   });
@@ -151,6 +152,13 @@ async function requestEvaluation(userMessage: string) {
     throw new Error("Evaluation response did not match the schema");
   }
 
+  // `gap` is the one free text field, and the prompt is a request, not a
+  // guarantee (docs/04 section 3.4). A malformed gap is treated the same as
+  // a schema mismatch, feeding the same retry rather than reaching the user.
+  if (!isValidGap(response.parsed_output.gap, transcriptText)) {
+    throw new Error("Evaluation response had an invalid gap");
+  }
+
   return response.parsed_output;
 }
 
@@ -159,6 +167,7 @@ export async function evaluateAnswer(input: EvaluationInput): Promise<Evaluation
   // recomputing would risk the two disagreeing as well as costing the work.
   const sentences = splitIntoSentences(input.wordTimings);
   const userMessage = buildUserMessage(input, sentences);
+  const transcriptText = input.wordTimings.map((timing) => timing.punctuatedWord).join(" ");
 
   // One retry. Timeouts and rate limits are usually transient and the user is
   // already watching a processing screen; a second attempt costs a few seconds
@@ -166,13 +175,13 @@ export async function evaluateAnswer(input: EvaluationInput): Promise<Evaluation
   // than showing an error (docs/04 section 5).
   let parsed;
   try {
-    parsed = await requestEvaluation(userMessage);
+    parsed = await requestEvaluation(userMessage, transcriptText);
   } catch (error) {
     // Logged, not swallowed. Without this, a real bug that happens to
     // succeed on the second attempt (nothing here pins temperature, so retry
     // is not a rerun of identical input) would never surface.
     console.warn("[evaluate] first attempt failed, retrying", { error });
-    parsed = await requestEvaluation(userMessage);
+    parsed = await requestEvaluation(userMessage, transcriptText);
   }
 
   const { rails, drops } = resolveRails(

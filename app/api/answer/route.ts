@@ -6,6 +6,7 @@ import {
   computeDurationMs,
   computeFillerCount,
   computeLongestPauseMs,
+  computeMeanConfidence,
   computeWordsPerMinute,
   isTooShortToScore,
 } from "@/lib/signals";
@@ -50,6 +51,7 @@ export async function POST(request: Request) {
     wordsPerMinute: computeWordsPerMinute(wordTimings.length, durationMs),
     longestPauseMs: computeLongestPauseMs(wordTimings),
     fillerCount: computeFillerCount(wordTimings),
+    confidence: computeMeanConfidence(wordTimings),
   });
 
   // FR-10: under 15 seconds is not scored and not saved as a story. Not an

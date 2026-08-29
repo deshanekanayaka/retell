@@ -22,6 +22,7 @@ type DeepgramResponse = {
           punctuated_word?: string;
           start?: number;
           end?: number;
+          confidence?: number;
         }>;
       }>;
     }>;
@@ -46,11 +47,15 @@ function parseResponse(data: DeepgramResponse): TranscriptionResult {
     if (typeof word.punctuated_word !== "string") {
       throw new Error("Deepgram response is missing punctuated words");
     }
+    if (typeof word.confidence !== "number") {
+      throw new Error("Deepgram response is missing word confidence");
+    }
     return {
       word: word.word,
       punctuatedWord: word.punctuated_word,
       start: word.start,
       end: word.end,
+      confidence: word.confidence,
     };
   });
 

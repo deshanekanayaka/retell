@@ -7,6 +7,10 @@ export type WordTiming = {
   punctuatedWord: string;
   start: number;
   end: number;
+  // Deepgram's per-word confidence, 0 to 1. Never sent to the judgement
+  // model (docs/02 section 3.2); it exists to gate the feedback screen, not
+  // to score content (FR-17, FR-42).
+  confidence: number;
 };
 
 export function computeDurationMs(durationSeconds: number): number {
@@ -40,6 +44,18 @@ export const MIN_SCORABLE_DURATION_MS = 15_000;
 
 export function isTooShortToScore(durationMs: number): boolean {
   return durationMs < MIN_SCORABLE_DURATION_MS;
+}
+
+// A single summary figure stored on `attempt` (FR-17). No threshold is
+// applied yet (FR-42): the real distribution across real answers is
+// unknown, so Phase 1 collects and does not gate.
+export function computeMeanConfidence(wordTimings: WordTiming[]): number {
+  if (wordTimings.length === 0) {
+    return 0;
+  }
+
+  const sum = wordTimings.reduce((total, timing) => total + timing.confidence, 0);
+  return sum / wordTimings.length;
 }
 
 // Fixed by docs/04-voice-and-evaluation.md section 2: a contract, not a

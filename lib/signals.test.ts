@@ -3,6 +3,7 @@ import {
   computeDurationMs,
   computeFillerCount,
   computeLongestPauseMs,
+  computeMeanConfidence,
   computeWordsPerMinute,
   FILLER_WORDS,
   isTooShortToScore,
@@ -41,26 +42,34 @@ describe("computeLongestPauseMs", () => {
   it("finds the largest gap between one word's end and the next word's start", () => {
     // gaps: 0.2s, 1.5s, 0.1s — the middle one is longest
     const wordTimings = [
-      { word: "so", punctuatedWord: "So", start: 0, end: 0.3 },
-      { word: "i", punctuatedWord: "I", start: 0.5, end: 0.6 },
-      { word: "think", punctuatedWord: "think", start: 2.1, end: 2.4 },
-      { word: "that", punctuatedWord: "that.", start: 2.5, end: 2.7 },
+      { word: "so", punctuatedWord: "So", start: 0, end: 0.3, confidence: 1 },
+      { word: "i", punctuatedWord: "I", start: 0.5, end: 0.6, confidence: 1 },
+      { word: "think", punctuatedWord: "think", start: 2.1, end: 2.4, confidence: 1 },
+      { word: "that", punctuatedWord: "that.", start: 2.5, end: 2.7, confidence: 1 },
     ];
     expect(computeLongestPauseMs(wordTimings)).toBe(1500);
   });
 
   it("returns zero when there are fewer than two words to have a gap between", () => {
     expect(computeLongestPauseMs([])).toBe(0);
-    expect(computeLongestPauseMs([{ word: "hi", punctuatedWord: "Hi.", start: 0, end: 0.2 }])).toBe(
-      0
-    );
+    expect(
+      computeLongestPauseMs([
+        { word: "hi", punctuatedWord: "Hi.", start: 0, end: 0.2, confidence: 1 },
+      ])
+    ).toBe(0);
   });
 });
 
 // Word timings only matter to computeFillerCount for their word text, not
-// timing, so these fixtures use placeholder start/end values.
+// timing or confidence, so these fixtures use placeholder values for both.
 function wordsAt(words: string[]) {
-  return words.map((word, i) => ({ word, punctuatedWord: word, start: i, end: i + 0.5 }));
+  return words.map((word, i) => ({
+    word,
+    punctuatedWord: word,
+    start: i,
+    end: i + 0.5,
+    confidence: 1,
+  }));
 }
 
 describe("computeFillerCount", () => {
@@ -94,10 +103,10 @@ describe("computeFillerCount", () => {
     // by docs/04 section 2, so sentence splitting reading punctuatedWord must
     // leave this signal untouched.
     const wordTimings = [
-      { word: "um", punctuatedWord: "Um,", start: 0, end: 0.5 },
-      { word: "i", punctuatedWord: "I", start: 1, end: 1.5 },
-      { word: "went", punctuatedWord: "went.", start: 2, end: 2.5 },
-      { word: "uh", punctuatedWord: "Uh...", start: 3, end: 3.5 },
+      { word: "um", punctuatedWord: "Um,", start: 0, end: 0.5, confidence: 1 },
+      { word: "i", punctuatedWord: "I", start: 1, end: 1.5, confidence: 1 },
+      { word: "went", punctuatedWord: "went.", start: 2, end: 2.5, confidence: 1 },
+      { word: "uh", punctuatedWord: "Uh...", start: 3, end: 3.5, confidence: 1 },
     ];
     expect(computeFillerCount(wordTimings)).toBe(2);
   });
@@ -117,5 +126,19 @@ describe("computeFillerCount", () => {
       "basically",
       "actually",
     ]);
+  });
+});
+
+describe("computeMeanConfidence", () => {
+  it("averages confidence across all words", () => {
+    const wordTimings = wordsAt(["a", "b", "c", "d"]).map((timing, i) => ({
+      ...timing,
+      confidence: [1, 0.5, 0.5, 1][i],
+    }));
+    expect(computeMeanConfidence(wordTimings)).toBe(0.75);
+  });
+
+  it("returns zero for an empty transcript", () => {
+    expect(computeMeanConfidence([])).toBe(0);
   });
 });

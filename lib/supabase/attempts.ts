@@ -10,6 +10,7 @@ export type AttemptFacts = {
   wordsPerMinute: number;
   longestPauseMs: number;
   fillerCount: number;
+  confidence: number;
 };
 
 export type Attempt = {
@@ -24,11 +25,12 @@ export type Attempt = {
   wordsPerMinute: number | null;
   longestPauseMs: number | null;
   fillerCount: number | null;
+  confidence: number | null;
   createdAt: string;
 };
 
 const ATTEMPT_COLUMNS =
-  "id, audio_url, question_text, transcript, word_timings, duration_ms, words_per_minute, longest_pause_ms, filler_count, created_at";
+  "id, audio_url, question_text, transcript, word_timings, duration_ms, words_per_minute, longest_pause_ms, filler_count, confidence, created_at";
 
 type AttemptRow = {
   id: string;
@@ -40,6 +42,7 @@ type AttemptRow = {
   words_per_minute: number | null;
   longest_pause_ms: number | null;
   filler_count: number | null;
+  confidence: number | null;
   created_at: string;
 };
 
@@ -54,6 +57,7 @@ function toAttempt(row: AttemptRow): Attempt {
     wordsPerMinute: row.words_per_minute,
     longestPauseMs: row.longest_pause_ms,
     fillerCount: row.filler_count,
+    confidence: row.confidence,
     createdAt: row.created_at,
   };
 }
@@ -161,6 +165,7 @@ export async function saveAttemptFacts(attemptId: string, facts: AttemptFacts): 
       words_per_minute: facts.wordsPerMinute,
       longest_pause_ms: facts.longestPauseMs,
       filler_count: facts.fillerCount,
+      confidence: facts.confidence,
     })
     .eq("id", attemptId);
 

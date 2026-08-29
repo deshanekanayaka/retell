@@ -59,6 +59,7 @@ export default async function VerifyAttemptPage() {
         <li>words_per_minute: {attempt.wordsPerMinute}</li>
         <li>longest_pause_ms: {attempt.longestPauseMs}</li>
         <li>filler_count: {attempt.fillerCount}</li>
+        <li>confidence: {attempt.confidence}</li>
         <li>words: {wordTimings.length}</li>
       </ul>
 

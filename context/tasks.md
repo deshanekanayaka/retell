@@ -11,20 +11,33 @@ Steps are defined in docs/03-delivery-plan.md. There are no dates.
 the reconciliation in context/docs-review-decisions.md. Tenant id injection, the replay hole,
 and FR-10's unenforced 15 second floor were fixed on the branch before merging; the bare retry
 now logs its first failure. `temperature: 0` was considered and dropped, models released after
-Opus 4.6 reject any value but 1.0, so self-consistency is verified empirically, not pinned.
+Opus 4.6 reject any value but 1.0, so self-consistency is verified empirically, not pinned. Same
+day, the full docs pass (69 decisions applied across docs/01 through 07) landed, and so did:
 
-- [ ] `gap` is validated by the prompt only. Add a code-level check: ends as a question, within
-  a length cap, no supplied detail the speaker didn't say (the one field that can break
-  ADR-009 in front of a user)
-- [ ] Deepgram's per-word `confidence` isn't captured at all. Keep it when parsing, store one
-  summary figure on `attempt`. Collect only, no threshold gate yet, distribution unknown
-- [ ] Build the evaluation harness: ~20 answers recorded by Deshan with deliberately varied
-  quality, self-labelled before seeing model output, held-out split, majority-class baseline,
-  CI assertions (no outcome → structure ≤1, "we" throughout → specificity ≤1, wrong question →
-  relevance ≤1, identical input → identical output)
-- [ ] Docs pass: reconcile the branch's own docs edits (docs/02, 04, 06, already merged in) with
-  context/docs-review-decisions.md's 69 logged decisions. Not yet done, the two were never read
-  against each other
+- [x] `gap` code-level validation (`lib/gap.ts`): single question, length cap, no invented
+  numbers. Caught two real bugs of its own in the process (question-mark counting missed the
+  double-barrelled shape docs/04's own example uses; digit-only number matching missed spelled-
+  out numbers), both fixed with tests.
+- [x] Confidence capture: `lib/signals.ts`'s `computeMeanConfidence`, threaded through
+  `lib/deepgram.ts`, `lib/supabase/attempts.ts`, the route, and the dev verify page. New
+  migration `20260829140000_attempt_confidence.sql`. Still collect-only, no threshold gate.
+- [x] Evaluation harness scaffolding: `lib/harness/` (report math, gold-set types, the four CI
+  behavioural assertions, a gold-set runner that reports but does not gate), kept out of the
+  default `pnpm test` via `vitest.config.mts` / `vitest.harness.config.mts` and run with
+  `pnpm test:eval`.
+- [x] Question bank: `lib/questions.ts`'s `QUESTION_BANK`, one plain question and one twist per
+  angle, approved by Deshan. Not yet wired into the answer route, since question selection is
+  S6/S8's job and neither exists on main yet; this is the data those steps will select from.
+- [x] Phase 1 hard stop, docs/03 section 1: condition based, not a calendar date. Phase 1 is
+  finished when every item in section 7.1's engineering definition of done is checked off, full
+  stop, regardless of what else still seems improvable.
+
+- [ ] The evaluation harness needs real data before it says anything: ~20 answers recorded by
+  Deshan with deliberately varied quality, self-labelled before seeing model output, held-out
+  split, dropped into `lib/harness/gold-set.json`. `pnpm test:eval` reports agreement once it's
+  filled in.
+- [ ] Docs pass reconciled the branch's edits with the 69 decisions; not yet re-checked against
+  today's code changes (gap validation, confidence, the question bank existing but unwired).
 - [ ] Rewrite context/features/s3-evaluate-and-feedback-spec.md to describe what's actually
   built plus what's left, not a from-scratch plan
 - [ ] S4: accounts, anonymous session claim, save an answer as a story
@@ -43,15 +56,13 @@ Opus 4.6 reject any value but 1.0, so self-consistency is verified empirically, 
 
 ## Later, parked
 
-- [ ] Question bank: replace the single hardcoded `PHASE_1_QUESTION` with the real per-angle
-  bank (docs/05 section 1.1), roughly 3 per angle plus a twist each. Needed before S8, and
-  ideally before the gold set so calibration answers span real questions, not one stopgap
 - [ ] Restart handling: a false start under 10 seconds is free and unlimited, a redo after 10
   seconds is capped at one (S1, RecordingUI)
 - [ ] Mic check transcribed internally against its known sentence, solely to measure
   transcription reliability. Never shown, scored, or played back. Amends FR-3
 - [ ] Low-confidence UX: plain message that it didn't come through clearly, gap sentence
-  omitted, one optional re-record kept alongside the original. Needs confidence capture first
+  omitted, one optional re-record kept alongside the original. Confidence capture is done
+  (`attempt.confidence`); the threshold and the screen behaviour are not built yet
 - [ ] `training_opt_in` column, default false, lands with accounts in S4
 - [ ] S5: the seven onboarding screens (unparks after the validation results are read)
 - [ ] S6: five question session, rate limits, kill switch, deletion (unparks after S5)

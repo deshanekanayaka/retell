@@ -11,6 +11,7 @@ function words(punctuated: string[]): WordTiming[] {
     punctuatedWord,
     start: i,
     end: i + 0.5,
+    confidence: 1,
   }));
 }
 

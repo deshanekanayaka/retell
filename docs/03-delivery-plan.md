@@ -26,9 +26,12 @@ and nothing here waits on recruiting anyone. If a cohort is ever recruited, the 
 01-PRD.md section 6 become real measurements rather than informal observations, and section 8's
 criteria are read against them; nothing else about this plan changes.
 
-**Because there is no cohort to force a stop, Phase 1 needs its own hard stop date, set by
-Deshan.** Not yet set. Without one, the engineering gate has no natural end and the risk is not
-running out of work, it is never declaring the work finished (01-PRD.md section 7).
+**Because there is no cohort to force a stop, Phase 1 needs its own hard stop, set by Deshan.**
+Condition based, not a calendar date: **Phase 1 is finished the moment every item in section
+7.1's engineering definition of done is checked off, full stop, regardless of what else still
+seems improvable.** Without this, the risk is not running out of work, it is never declaring the
+work finished (01-PRD.md section 7); the gate exists precisely so that "done" is a checklist
+completing, not a feeling arriving.
 
 ## 2. Shape of the plan
 

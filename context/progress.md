@@ -67,3 +67,17 @@ outcome. Written at step 10 of the feature workflow.
   self-consistency is verified empirically rather than pinned. Confidence capture and code-level
   `gap` validation remain open, tracked in context/tasks.md alongside the evaluation harness and
   the docs pass still owed against the branch's own docs/02, 04, 06 edits.
+- 2026-08-29: docs pass, remaining hardening, and the evaluation harness. The 69 decisions from
+  the docs walkthrough applied across docs/01 through 07 (largest changes: docs/01 drops the
+  day-4/day-14 metrics for an engineering gate and gains four new FRs; docs/03 cuts the cohort
+  test entirely, path B; docs/05 fixes an unreachable grade-formula bound and reverses `again`'s
+  reset behaviour). `gap` gets a code-level check (`lib/gap.ts`), catching two bugs in its own
+  first draft along the way. Deepgram's per-word confidence is captured, summarised
+  (`computeMeanConfidence`), and stored (`attempt.confidence`, new migration). The evaluation
+  harness (`lib/harness/`) is scaffolded: confusion matrix and agreement math, four CI
+  behavioural assertions against authored fixtures, a gold-set runner that reports and does not
+  gate, kept out of `pnpm test` via a second vitest config and run with `pnpm test:eval`; the 20
+  recorded, self-labelled answers it needs are still Deshan's to produce. The real per-angle
+  question bank (`lib/questions.ts`) is drafted, approved, and committed, not yet wired into the
+  answer route since question selection is S6/S8's job. docs/03's Phase 1 stop is now a
+  condition (the engineering gate, section 7.1 met, full stop) rather than an unset date.
