@@ -47,7 +47,8 @@ export default function Home() {
           <div className="flex flex-col gap-3">
             <StartLink className="w-fit" />
             <p className="font-sans text-sm text-muted">
-              Chrome or Edge for now, because it needs your microphone.
+              Chrome or Edge for now. It is the only place we have made the
+              microphone flow reliable.
             </p>
           </div>
         </div>
