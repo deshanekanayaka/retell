@@ -41,3 +41,29 @@ outcome. Written at step 10 of the feature workflow.
   live against the dev Supabase project: a real recording with six deliberate fillers came back
   with all six intact in the transcript and correct signal values. docs/02 and docs/06 updated
   to close out the `recording`/`attempt` interim-table question left open since S1.
+- 2026-08-26: S3 complete — evaluate and feedback merged to main. `lib/evaluate.ts` scores three
+  rubric dimensions with claude-opus-5 against a Zod-enforced schema (FR-19), stamps model and
+  rubric version (FR-20), and writes to a new `evaluation` table kept separate from `attempt`
+  (FR-21). Rails (situation, action, result) are returned as sentence positions, never text, and
+  resolved to word ranges in `lib/rails.ts`, so the model can never write words that land next
+  to the user's own transcript (ADR-017). Feedback screen shows the three blocks in order with
+  no score (FR-22, FR-23), degrading to transcript-only if evaluation fails. Deepgram pinned to
+  `model=nova-2` with `punctuate=true`: the default base tier mistranscribed second-language
+  speech and nova-3 drops the filler words `filler_count` depends on as a contract signal.
+  Verified live against six real recordings across the calibration and post-review passes.
+  Accepted, not fixed: a vague answer can leave a plausible action sentence unclaimed and score
+  structure one point lower than a generous read would, watched in the cohort rather than tuned
+  on three samples.
+- 2026-08-29: S3 reconciled and merged to main. Built on `feature/s3-evaluate-and-feedback`
+  2026-08-26 but never merged; found three days later during a full docs walkthrough
+  (context/docs-review-decisions.md). Reviewed properly, then fixed on the branch before
+  merging: `createAttempt` and a new `findAttemptByPath` reject any storage path not prefixed
+  with the caller's verified user id (tenant id injection), an existing attempt for a path now
+  resumes instead of reprocessing (the replay hole), and FR-10's 15 second floor is enforced via
+  a new `isTooShortToScore` (`lib/signals.ts`), with the feedback screen distinguishing that
+  case from a genuine evaluation failure without ever calling an answer too short. `evaluateAnswer`'s
+  retry now logs the first failure instead of swallowing it. `temperature: 0` was considered and
+  dropped: the installed SDK rejects any value but 1.0 on models released after Opus 4.6, so
+  self-consistency is verified empirically rather than pinned. Confidence capture and code-level
+  `gap` validation remain open, tracked in context/tasks.md alongside the evaluation harness and
+  the docs pass still owed against the branch's own docs/02, 04, 06 edits.

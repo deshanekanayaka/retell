@@ -1,5 +1,10 @@
 export type WordTiming = {
   word: string;
+  // The same word carrying Deepgram's punctuation and capitalisation. Added
+  // alongside `word` rather than replacing it: `filler_count` is a contract
+  // (docs/04 section 2) and reads `word`, so it must not move when sentence
+  // splitting starts reading `punctuatedWord`.
+  punctuatedWord: string;
   start: number;
   end: number;
 };
@@ -26,6 +31,15 @@ export function computeLongestPauseMs(wordTimings: WordTiming[]): number {
   }
 
   return Math.round(longestPauseSeconds * 1000);
+}
+
+// FR-10: under this floor an answer is not scored and not saved as a story.
+// A fact about the audio, not a judgement, which is why it is checked here
+// rather than folded into the rubric.
+export const MIN_SCORABLE_DURATION_MS = 15_000;
+
+export function isTooShortToScore(durationMs: number): boolean {
+  return durationMs < MIN_SCORABLE_DURATION_MS;
 }
 
 // Fixed by docs/04-voice-and-evaluation.md section 2: a contract, not a
