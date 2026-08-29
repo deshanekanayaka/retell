@@ -5,11 +5,24 @@ import {
   computeLongestPauseMs,
   computeWordsPerMinute,
   FILLER_WORDS,
+  isTooShortToScore,
+  MIN_SCORABLE_DURATION_MS,
 } from "./signals";
 
 describe("computeDurationMs", () => {
   it("converts seconds to milliseconds", () => {
     expect(computeDurationMs(12.5)).toBe(12500);
+  });
+});
+
+describe("isTooShortToScore", () => {
+  it("is true under the FR-10 floor", () => {
+    expect(isTooShortToScore(MIN_SCORABLE_DURATION_MS - 1)).toBe(true);
+  });
+
+  it("is false at and above the floor", () => {
+    expect(isTooShortToScore(MIN_SCORABLE_DURATION_MS)).toBe(false);
+    expect(isTooShortToScore(MIN_SCORABLE_DURATION_MS + 1)).toBe(false);
   });
 });
 

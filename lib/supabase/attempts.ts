@@ -94,8 +94,43 @@ export async function getLatestAttempt(): Promise<Attempt | null> {
   return data ? toAttempt(data) : null;
 }
 
+// The path is chosen by the browser (lib/supabase/storage.ts's
+// createSignedUploadUrl), so it arrives here as caller-supplied input, not as
+// something the server already trusts. Every upload path is keyed
+// `{userId}/{uuid}.webm`; a path with any other prefix cannot be this
+// caller's own recording, whatever the request body claims.
+function assertPathOwnedByCaller(path: string, userId: string): void {
+  if (!path.startsWith(`${userId}/`)) {
+    throw new Error("Path does not belong to the caller");
+  }
+}
+
+// Looked up before creating a new attempt, so the same signed upload path
+// POSTed twice resumes the existing attempt rather than re-transcribing and
+// re-evaluating audio that has already been processed.
+export async function findAttemptByPath(path: string): Promise<Attempt | null> {
+  const { supabase, userId } = await requireSession();
+
+  assertPathOwnedByCaller(path, userId);
+
+  const { data, error } = await supabase
+    .from("attempt")
+    .select(ATTEMPT_COLUMNS)
+    .eq("audio_url", path)
+    .eq("anonymous_session_id", userId)
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  return data ? toAttempt(data) : null;
+}
+
 export async function createAttempt(path: string, questionText: string): Promise<string> {
   const { supabase, userId } = await requireSession();
+
+  assertPathOwnedByCaller(path, userId);
 
   const { data, error } = await supabase
     .from("attempt")

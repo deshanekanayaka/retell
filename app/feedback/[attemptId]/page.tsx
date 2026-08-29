@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { Chip } from "@/components/ui/Chip";
 import { TranscriptRail } from "@/components/ui/TranscriptRail";
 import { RAIL_LABELS } from "@/lib/rail-labels";
+import { isTooShortToScore } from "@/lib/signals";
 import { getAttempt } from "@/lib/supabase/attempts";
 import { getLatestEvaluation } from "@/lib/supabase/evaluations";
 import { toTranscriptSegments } from "@/lib/transcript";
@@ -83,7 +84,9 @@ export default async function FeedbackPage({
       ) : (
         <div className="flex flex-col gap-2 border-t border-rule pt-6">
           <p className="font-sans text-[15px] leading-[1.4] text-muted">
-            We couldn&apos;t finish reading this one back. Your answer is saved.
+            {isTooShortToScore(attempt.durationMs ?? 0)
+              ? "Let's give this one another go."
+              : "We couldn't finish reading this one back. Your answer is saved."}
           </p>
         </div>
       )}

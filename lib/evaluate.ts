@@ -167,7 +167,11 @@ export async function evaluateAnswer(input: EvaluationInput): Promise<Evaluation
   let parsed;
   try {
     parsed = await requestEvaluation(userMessage);
-  } catch {
+  } catch (error) {
+    // Logged, not swallowed. Without this, a real bug that happens to
+    // succeed on the second attempt (nothing here pins temperature, so retry
+    // is not a rerun of identical input) would never surface.
+    console.warn("[evaluate] first attempt failed, retrying", { error });
     parsed = await requestEvaluation(userMessage);
   }
 

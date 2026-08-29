@@ -7,8 +7,9 @@ import {
   computeFillerCount,
   computeLongestPauseMs,
   computeWordsPerMinute,
+  isTooShortToScore,
 } from "@/lib/signals";
-import { createAttempt, saveAttemptFacts } from "@/lib/supabase/attempts";
+import { createAttempt, findAttemptByPath, saveAttemptFacts } from "@/lib/supabase/attempts";
 import { saveEvaluation } from "@/lib/supabase/evaluations";
 import { createSignedDownloadUrl } from "@/lib/supabase/storage";
 
@@ -17,6 +18,16 @@ export async function POST(request: Request) {
 
   if (typeof body.path !== "string" || body.path.length === 0) {
     return NextResponse.json({ error: "path is required" }, { status: 400 });
+  }
+
+  // The same signed upload path can reach this route more than once, a
+  // retried request, a slow connection resubmitting, or an attacker replaying
+  // it to spend the Deepgram and model budget for free. An existing attempt
+  // for this exact path means the audio has already been processed, so the
+  // route resumes it rather than doing the work again.
+  const existing = await findAttemptByPath(body.path);
+  if (existing) {
+    return NextResponse.json({ attemptId: existing.id, evaluated: existing.transcript !== null });
   }
 
   // The question is resolved here, never taken from the request body. It is
@@ -40,6 +51,14 @@ export async function POST(request: Request) {
     longestPauseMs: computeLongestPauseMs(wordTimings),
     fillerCount: computeFillerCount(wordTimings),
   });
+
+  // FR-10: under 15 seconds is not scored and not saved as a story. Not an
+  // error, so the attempt is reported as succeeded and the feedback screen
+  // shows the transcript without a gap, the same shape as an evaluation that
+  // failed for a technical reason (docs/04 section 5).
+  if (isTooShortToScore(durationMs)) {
+    return NextResponse.json({ attemptId, evaluated: false });
+  }
 
   // A failed evaluation is not a failed answer. The user has just spoken for a
   // minute and docs/04 section 5 forbids showing that as an error, so the
