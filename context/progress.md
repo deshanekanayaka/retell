@@ -92,3 +92,10 @@ outcome. Written at step 10 of the feature workflow.
   as written). Design skill packs installed to `~/.claude/skills` this session for advisory use.
   Record, feedback and privacy screens still carry the old plain treatment; that follow-up pass
   is unscoped.
+- 2026-08-30: Rewrote context/features/s3-evaluate-and-feedback-spec.md from a pre-implementation
+  proposal to an as-built record. Resolved all five "Open, needs Deshan" gate items inline
+  (question text, ADR-017, feedback route, grade column, schema), added a "Built beyond this
+  spec" section for gap validation, confidence capture, the replay guard and the too-short
+  degrade path, trimmed the locators-not-quotes reasoning to point at ADR-017 instead of
+  duplicating it, and closed with a "Still open" section mirroring tasks.md's five remaining Now
+  items. Doc-only, no code changed.

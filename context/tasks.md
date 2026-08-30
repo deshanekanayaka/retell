@@ -38,7 +38,7 @@ day, the full docs pass (69 decisions applied across docs/01 through 07) landed,
   filled in.
 - [ ] Docs pass reconciled the branch's edits with the 69 decisions; not yet re-checked against
   today's code changes (gap validation, confidence, the question bank existing but unwired).
-- [ ] Rewrite context/features/s3-evaluate-and-feedback-spec.md to describe what's actually
+- [x] Rewrite context/features/s3-evaluate-and-feedback-spec.md to describe what's actually
   built plus what's left, not a from-scratch plan
 - [ ] S4: accounts, anonymous session claim, save an answer as a story
 - [ ] Check the `structure` anchor in docs/04 section 3.2 against
