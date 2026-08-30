@@ -102,7 +102,7 @@ export type Evaluation = {
   relevance: number;
   structure: number;
   specificity: number;
-  gap: string;
+  gap: string | null;
   angles: AngleSlug[];
   rails: ResolvedRails;
 };
@@ -130,7 +130,12 @@ ${numbered}
 </transcript>`;
 }
 
-async function requestEvaluation(userMessage: string, transcriptText: string) {
+// Throws only when the call itself is unsalvageable: a refusal, or a
+// response that failed to parse against the schema. Either way there is
+// nothing usable in the response, so the caller's retry re-runs the whole
+// call. `gap` shape is validated separately by the caller, since a bad gap
+// leaves the rest of the response (the scores, the rails) perfectly usable.
+async function requestEvaluation(userMessage: string) {
   const client = new Anthropic({
     apiKey: required("ANTHROPIC_API_KEY", process.env.ANTHROPIC_API_KEY),
   });
@@ -155,13 +160,6 @@ async function requestEvaluation(userMessage: string, transcriptText: string) {
     throw new Error("Evaluation response did not match the schema");
   }
 
-  // `gap` is the one free text field, and the prompt is a request, not a
-  // guarantee (docs/04 section 3.4). A malformed gap is treated the same as
-  // a schema mismatch, feeding the same retry rather than reaching the user.
-  if (!isValidGap(response.parsed_output.gap, transcriptText)) {
-    throw new Error("Evaluation response had an invalid gap");
-  }
-
   return response.parsed_output;
 }
 
@@ -178,13 +176,36 @@ export async function evaluateAnswer(input: EvaluationInput): Promise<Evaluation
   // than showing an error (docs/04 section 5).
   let parsed;
   try {
-    parsed = await requestEvaluation(userMessage, transcriptText);
+    parsed = await requestEvaluation(userMessage);
   } catch (error) {
     // Logged, not swallowed. Without this, a real bug that happens to
     // succeed on the second attempt (nothing here pins temperature, so retry
     // is not a rerun of identical input) would never surface.
     console.warn("[evaluate] first attempt failed, retrying", { error });
-    parsed = await requestEvaluation(userMessage, transcriptText);
+    parsed = await requestEvaluation(userMessage);
+  }
+
+  // `gap` gets its own one-shot retry, separate from the schema/refusal retry
+  // above. A vague answer is exactly the input most likely to make the model
+  // ask two things at once (docs/04 section 3.4 bans that shape), so this is
+  // not rare noise. Losing the scores and rails over a bad gap would throw
+  // away a perfectly good evaluation for a problem in one field, so a second
+  // gap failure degrades to no gap rather than failing the whole evaluation.
+  let gap: string | null = parsed.gap;
+  if (!isValidGap(parsed.gap, transcriptText)) {
+    console.warn("[evaluate] gap invalid, retrying for a better gap", { gap: parsed.gap });
+    try {
+      const retried = await requestEvaluation(userMessage);
+      gap = isValidGap(retried.gap, transcriptText) ? retried.gap : null;
+      if (gap === null) {
+        console.warn("[evaluate] gap still invalid after retry, dropping", {
+          gap: retried.gap,
+        });
+      }
+    } catch (error) {
+      console.warn("[evaluate] gap retry failed outright, dropping gap", { error });
+      gap = null;
+    }
   }
 
   const { rails, drops } = resolveRails(
@@ -205,7 +226,7 @@ export async function evaluateAnswer(input: EvaluationInput): Promise<Evaluation
     relevance: parsed.relevance,
     structure: parsed.structure,
     specificity: parsed.specificity,
-    gap: parsed.gap,
+    gap,
     angles: parsed.angles,
     rails,
   };

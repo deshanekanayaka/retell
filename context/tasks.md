@@ -35,7 +35,13 @@ day, the full docs pass (69 decisions applied across docs/01 through 07) landed,
 - [ ] The evaluation harness needs real data before it says anything: ~20 answers recorded by
   Deshan with deliberately varied quality, self-labelled before seeing model output, held-out
   split, dropped into `lib/harness/gold-set.json`. `pnpm test:eval` reports agreement once it's
-  filled in.
+  filled in. **5 of ~20 done 2026-08-30.** First read: structure exact agreement 40%, model
+  consistently scores structure a point above Deshan's label on the three `structure: 1` entries,
+  a second data point corroborating the anchor bug below. Relevance also worth a second look:
+  entries 2 and 4 were labelled `relevance: 1` for being vague, but relevance and specificity are
+  meant to be scored independently (docs/04 section 3.2), and both entries are arguably on-topic
+  just unspecific, the same conflation caught and corrected on a fifth (off-topic) entry before
+  filing. n=5 is too small to read as more than a first look.
 - [ ] Docs pass reconciled the branch's edits with the 69 decisions; not yet re-checked against
   today's code changes (gap validation, confidence, the question bank existing but unwired).
 - [x] Rewrite context/features/s3-evaluate-and-feedback-spec.md to describe what's actually

@@ -99,3 +99,15 @@ outcome. Written at step 10 of the feature workflow.
   degrade path, trimmed the locators-not-quotes reasoning to point at ADR-017 instead of
   duplicating it, and closed with a "Still open" section mirroring tasks.md's five remaining Now
   items. Doc-only, no code changed.
+- 2026-08-30: First 5 of ~20 gold-set entries recorded, self-labelled, added to
+  `lib/harness/gold-set.json`. Running the harness surfaced a real bug: a rejected `gap` (caught
+  correctly by `lib/gap.ts`, most often on vague answers producing a double-barrelled question)
+  discarded the entire evaluation, scores and rails included, after one retry. Fixed in
+  `lib/evaluate.ts`: `gap` now gets its own dedicated one-shot retry separate from the
+  schema/refusal retry, and a second gap failure stores everything else with `gap: null` rather
+  than throwing the evaluation away. `Evaluation.gap` and `StoredEvaluation.gap` are now
+  `string | null`; the feedback screen gained a third branch (evaluation present, gap null) with
+  its own degrade copy. Migration `20260830203456_evaluation_gap_nullable.sql` drops the
+  column's `not null`. First gold-set report (n=5, too small to read as more than a first look):
+  structure exact agreement 40%, a second data point corroborating the structure-anchor bug
+  already in tasks.md.

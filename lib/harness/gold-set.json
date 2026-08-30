@@ -1,1 +1,27 @@
-[]
+[
+  {
+    "question": "Tell me about something you worked on with other people recently. What happened?",
+    "transcript": "When I was in uni, I had to do a group project. We had to build a Django application for a client called Sky. We had a twelve week deadline, and we also supposed to give weekly reports to the engineers. So I designed the database schema and the front end, and the team was depending on my output to move forward. So I mapped down all of the entities and the relationships. I made the conceptual ERD first and then made it into a logical ERD before we touched code so everyone had a clear picture before building on it. Then I moved to the front end design with the teammate. So we designed wireframes, layout, and how everything connected. We were able to deliver on time. We passed all the checks, and we also gave weekly reports to the lecturers and the sky engineers.",
+    "labels": { "relevance": 3, "structure": 3, "specificity": 3 }
+  },
+  {
+    "question": "Tell me about something you worked on with other people recently. What happened?",
+    "transcript": "So there was this unique project where a few of us built an app for a client. Uh, it was pretty tight on time, and everyone had their own part to do. Uh, I was handling one of more important bits, so people were were waiting on me a little. I just got stuck in early and so so did my part so others could carry on with theirs and kept talking to the team to keep things moving. In the end, it worked out fine. Um, we got it done, and the client seemed happy. I think, uh, the main thing I learned is that if people are depending on you, it's good to get going early rather than sit on it.",
+    "labels": { "relevance": 1, "structure": 1, "specificity": 1 }
+  },
+  {
+    "question": "Tell me about something you worked on with other people recently. What happened?",
+    "transcript": "Uh, so this was the Sky project. Five of us building a Django health check app for a real client. Uh, hard to a week deadline and weekly progress to the SkyStone engineers. I was leading two tasks, the database scheme and the front end design, and the rest of the team was depending on my output before they could move forward with their own work. So I started by mapping out all the entities and their relationships, going through the conceptual ARD first, then redefining into a logical one before anyone touched the code. That gave the team a clear picture of the data before they built on top of it. Once the schema was solid, I moved to the front end, working through wireframes and layouts and colors with a teammate.",
+    "labels": { "relevance": 2, "structure": 2, "specificity": 2 }
+  },
+  {
+    "question": "Tell me about something you worked on with other people recently. What happened?",
+    "transcript": "Uh, Yeah. So there was this group project, Sky, um, for a client, GenWeb, uh, health check related thingy. So there were five of us, maybe six at first. So, um, someone dropped the task. Uh, deadline was tight, twelve weeks. Weekly reports to the engineers, um, which was a bit stressful. Uh, I I was doing database stuff and also helping with the front end. And it got a bit chaotic because the schema kept changing, and, uh, we figured it out what the client wanted. So there was this one meeting where we almost raided the whole entity thing, missed the relationship between user and, uh, health roles, if I remember correctly. Uh, and I was trying to keep everyone aligned on that while not failing behind.",
+    "labels": { "relevance": 1, "structure": 1, "specificity": 1 }
+  },
+  {
+    "question": "Tell me about something you worked on with other people recently. What happened?",
+    "transcript": "So this past weekend, I actually got back into guitar. I've been doing lot of finger picking practice, working through some Tommy Emmanuel style patterns, trying to fix my thumb independence, uh, which was always has been my weak point. I set up a routine, a twenty minute thumb exercise thing before touching a song, and I've been recording myself on my phone to check the timing. I'm planning to keep doing that this weekend too. Maybe learn a new piece all the way, uh, through instead of just drilling exercises. Uh, it's been a nice way to unwind after job applications, honestly.",
+    "labels": { "relevance": 0, "structure": 1, "specificity": 2 }
+  }
+]
