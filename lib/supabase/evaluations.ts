@@ -12,7 +12,7 @@ export type StoredEvaluation = {
   id: string;
   model: string;
   rubricVersion: number;
-  gap: string;
+  gap: string | null;
   angles: AngleSlug[];
   situation: WordRange | null;
   action: WordRange | null;

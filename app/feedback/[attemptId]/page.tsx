@@ -64,7 +64,7 @@ export default async function FeedbackPage({
         </div>
       </div>
 
-      {evaluation ? (
+      {evaluation && evaluation.gap ? (
         <div className="flex flex-col gap-2 border-t border-rule pt-6">
           <p className="max-w-[28ch] font-serif text-[34px] leading-tight text-ink">
             {evaluation.gap}
@@ -84,9 +84,11 @@ export default async function FeedbackPage({
       ) : (
         <div className="flex flex-col gap-2 border-t border-rule pt-6">
           <p className="font-sans text-[15px] leading-[1.4] text-muted">
-            {isTooShortToScore(attempt.durationMs ?? 0)
-              ? "Let's try an easier way in."
-              : "We couldn't finish reading this one back. Your answer is saved."}
+            {evaluation
+              ? "We couldn't land on one clear thing to ask next. Your answer is saved."
+              : isTooShortToScore(attempt.durationMs ?? 0)
+                ? "Let's try an easier way in."
+                : "We couldn't finish reading this one back. Your answer is saved."}
           </p>
         </div>
       )}
