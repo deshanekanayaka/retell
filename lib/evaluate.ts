@@ -17,13 +17,14 @@ const MODEL = "claude-opus-5";
 // FR-20. Incremented by any change to the prompt or the anchors (docs/04
 // section 3.4).
 //
-// Held at 1 for the duration of S3 calibration, decided by Deshan. The only
-// answers evaluated so far are throwaway tuning reads by the founder, and
-// incrementing per tweak would reach the cohort at version 6 with five
-// versions nobody can compare against. Same reasoning section 3.4 used when
-// the prompt was warmed. Freezes before any real user sees it; after that,
-// every prompt edit increments.
-const RUBRIC_VERSION = 1;
+// Held at 1 through S3 calibration (decided by Deshan) while the only answers
+// evaluated were throwaway tuning reads, so no version was ever worth
+// comparing against another. That freeze ends here: this is the first edit
+// made after the structure anchor bug was caught against a real test
+// fixture (docs/04 section 3.2, context/tasks.md), so it is the first
+// genuine rubric change and gets its own version rather than being folded
+// into the frozen one.
+const RUBRIC_VERSION = 2;
 
 // Literal unions rather than min/max, so the scores arrive as a closed enum
 // the API enforces rather than a number we have to range-check afterwards.
@@ -62,8 +63,8 @@ relevance
 
 structure
 - 0: no discernible situation, action or result
-- 1: one of the three present
-- 2: two of the three present
+- 1: one of the three present, or situation and action present with no result at all
+- 2: two of the three present, including a result, even if thin
 - 3: all three present and in a followable order
 
 specificity

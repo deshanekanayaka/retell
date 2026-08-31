@@ -225,8 +225,8 @@ The model is given these anchors, not left to invent a scale.
 
 **structure**
 - 0: no discernible situation, action or result
-- 1: one of the three present
-- 2: two of the three present
+- 1: one of the three present, or situation and action present with no result at all
+- 2: two of the three present, including a result, even if thin
 - 3: all three present and in a followable order
 
 **specificity**

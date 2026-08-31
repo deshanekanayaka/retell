@@ -13,6 +13,12 @@ outcome. Written at step 10 of the feature workflow.
   weighted kappa as the gold-set metric, but `lib/harness/report.ts` only had exact/within-one
   agreement and a majority-class baseline. Added `quadraticWeightedKappa` (test-first, 5 new
   tests) and wired it into `run-gold-set.eval.test.ts`'s printout.
+- 2026-08-31: Fixed the `structure` anchor bug flagged in context/tasks.md — "two of three
+  present" let an answer with no result at all still score 2. Founder decision: fix the anchor
+  wording. `docs/04-voice-and-evaluation.md` section 3.2 and the prompt in `lib/evaluate.ts` now
+  read "1: one of the three present, or situation and action present with no result at all" /
+  "2: two of the three present, including a result, even if thin". `RUBRIC_VERSION` bumped to 2,
+  the first real increment since the freeze at version 1 during S3 calibration.
 - 2026-08-23: S1 complete — record and upload merged to main. Anonymous Supabase auth,
   Chrome/Chromium gate, permission screen (ADR-014: plain `getUserMedia`, not `<usermedia>`,
   ADR-013 superseded), MediaRecorder capture with countdown/restart/waveform, signed-URL upload
