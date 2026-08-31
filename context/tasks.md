@@ -42,21 +42,9 @@ day, the full docs pass (69 decisions applied across docs/01 through 07) landed,
   meant to be scored independently (docs/04 section 3.2), and both entries are arguably on-topic
   just unspecific, the same conflation caught and corrected on a fifth (off-topic) entry before
   filing. n=5 is too small to read as more than a first look.
-- [ ] Docs pass reconciled the branch's edits with the 69 decisions; not yet re-checked against
-  today's code changes (gap validation, confidence, the question bank existing but unwired).
 - [x] Rewrite context/features/s3-evaluate-and-feedback-spec.md to describe what's actually
   built plus what's left, not a from-scratch plan
 - [ ] S4: accounts, anonymous session claim, save an answer as a story
-- [ ] Check the `structure` anchor in docs/04 section 3.2 against
-  `lib/harness/assertions.eval.test.ts`'s "never says how it ended" case. That fixture (situation
-  and action present, no result stated) scores `structure: 2` from the model consistently, every
-  run, both before and after the transcript trust-boundary prompt edit (2026-08-29). The test
-  expects 1 or lower. This is not model flakiness: the anchor as written ("2: two of the three
-  present") literally matches this transcript, since situation and action are both present. The
-  test's author likely intended "structure clearly incomplete" to mean 1, which the current
-  wording does not enforce. Needs a decision: fix the anchor wording, fix the test's expected
-  score, or confirm 2 is correct and the test fixture was written on a wrong assumption. Founder
-  decision, rubric anchors are propose-only (context/ai-interaction.md).
 
 ## General hardening, needed before real users
 

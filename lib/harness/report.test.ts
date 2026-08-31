@@ -3,6 +3,7 @@ import {
   buildConfusionMatrix,
   exactAgreement,
   majorityClassBaseline,
+  quadraticWeightedKappa,
   withinOneAgreement,
   type ScorePair,
 } from "./report";
@@ -69,5 +70,55 @@ describe("majorityClassBaseline", () => {
     // exact here has added nothing over always guessing the common label.
     expect(majorityClassBaseline(skewed)).toBe(4 / 5);
     expect(exactAgreement(skewed)).toBe(4 / 5);
+  });
+});
+
+describe("quadraticWeightedKappa", () => {
+  it("is zero for no pairs, not NaN", () => {
+    expect(quadraticWeightedKappa([])).toBe(0);
+  });
+
+  it("is 1 for perfect agreement across varied categories", () => {
+    const perfect: ScorePair[] = [
+      { gold: 0, model: 0 },
+      { gold: 1, model: 1 },
+      { gold: 2, model: 2 },
+      { gold: 3, model: 3 },
+    ];
+    expect(quadraticWeightedKappa(perfect)).toBe(1);
+  });
+
+  it("is 1 when every pair lands on the same cell, not 0/0", () => {
+    const allSame: ScorePair[] = [
+      { gold: 2, model: 2 },
+      { gold: 2, model: 2 },
+      { gold: 2, model: 2 },
+    ];
+    expect(quadraticWeightedKappa(allSame)).toBe(1);
+  });
+
+  it("is -1 when every miss is the maximum possible distance", () => {
+    const worst: ScorePair[] = [
+      { gold: 0, model: 3 },
+      { gold: 3, model: 0 },
+      { gold: 0, model: 3 },
+      { gold: 3, model: 0 },
+    ];
+    expect(quadraticWeightedKappa(worst)).toBe(-1);
+  });
+
+  it("reads near zero for PAIRS despite 60 percent exact agreement, since the only miss lands on the two categories the marginals already favour", () => {
+    expect(quadraticWeightedKappa(PAIRS)).toBeCloseTo(0, 10);
+  });
+
+  it("is close to but not equal to exact agreement on a skewed set with one off-by-one miss", () => {
+    const skewed: ScorePair[] = [
+      { gold: 2, model: 2 },
+      { gold: 2, model: 2 },
+      { gold: 2, model: 1 },
+      { gold: 2, model: 2 },
+      { gold: 0, model: 0 },
+    ];
+    expect(quadraticWeightedKappa(skewed)).toBeCloseTo(0.8484848484848485, 10);
   });
 });

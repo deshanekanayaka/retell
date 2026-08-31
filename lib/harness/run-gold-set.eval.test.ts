@@ -6,6 +6,7 @@ import {
   buildConfusionMatrix,
   exactAgreement,
   majorityClassBaseline,
+  quadraticWeightedKappa,
   withinOneAgreement,
   type ScorePair,
 } from "./report";
@@ -34,6 +35,7 @@ function printDimensionReport(dimension: string, pairs: ScorePair[]) {
   console.log(`  exact agreement:       ${(exactAgreement(pairs) * 100).toFixed(0)}%`);
   console.log(`  within-one agreement:  ${(withinOneAgreement(pairs) * 100).toFixed(0)}%`);
   console.log(`  majority-class baseline: ${(majorityClassBaseline(pairs) * 100).toFixed(0)}%`);
+  console.log(`  quadratic weighted kappa: ${quadraticWeightedKappa(pairs).toFixed(2)}`);
   console.log(`  confusion matrix (rows = gold, columns = model, 0 to 3):`);
   for (const row of matrix) {
     console.log(`    ${row.join("  ")}`);
