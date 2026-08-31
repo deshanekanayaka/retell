@@ -7,6 +7,12 @@ outcome. Written at step 10 of the feature workflow.
   typecheck) and verified each one runs clean against the scaffolded app.
 - 2026-08-23: S0 complete — repo pushed to origin/main, CI green, Vercel deploy live, Supabase
   project wired with client/server helpers in lib/supabase/.
+- 2026-08-31: Docs pass re-check against today's code — gap validation, confidence capture,
+  angles/parts schema and the question bank all matched their decisions in
+  context/docs-review-decisions.md. One gap found and fixed: decision 24 names quadratic
+  weighted kappa as the gold-set metric, but `lib/harness/report.ts` only had exact/within-one
+  agreement and a majority-class baseline. Added `quadraticWeightedKappa` (test-first, 5 new
+  tests) and wired it into `run-gold-set.eval.test.ts`'s printout.
 - 2026-08-23: S1 complete — record and upload merged to main. Anonymous Supabase auth,
   Chrome/Chromium gate, permission screen (ADR-014: plain `getUserMedia`, not `<usermedia>`,
   ADR-013 superseded), MediaRecorder capture with countdown/restart/waveform, signed-URL upload

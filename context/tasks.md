@@ -42,8 +42,6 @@ day, the full docs pass (69 decisions applied across docs/01 through 07) landed,
   meant to be scored independently (docs/04 section 3.2), and both entries are arguably on-topic
   just unspecific, the same conflation caught and corrected on a fifth (off-topic) entry before
   filing. n=5 is too small to read as more than a first look.
-- [ ] Docs pass reconciled the branch's edits with the 69 decisions; not yet re-checked against
-  today's code changes (gap validation, confidence, the question bank existing but unwired).
 - [x] Rewrite context/features/s3-evaluate-and-feedback-spec.md to describe what's actually
   built plus what's left, not a from-scratch plan
 - [ ] S4: accounts, anonymous session claim, save an answer as a story
